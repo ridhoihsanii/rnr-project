@@ -1,12 +1,13 @@
 (function () {
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  var CARD_WIDTH = 240;
-  var CARD_HEIGHT = 112;
-  var CARD_RADIUS = 16;
+  // reduced dimensions to improve layout fit on smaller viewports
+  var CARD_WIDTH = 220;
+  var CARD_HEIGHT = 96;
+  var CARD_RADIUS = 12;
   var BASE_GAP = 8;
   var LABEL_HEIGHT = 48;
-  var ROUND_WIDTH = 264;
-  var ROUND_GAP = 48;
+  var ROUND_WIDTH = 240;
+  var ROUND_GAP = 40;
   var ROUND_STEP = ROUND_WIDTH + ROUND_GAP;
 
   function createElement(tagName, className, text) {
@@ -191,16 +192,9 @@
     input.dataset.round = String(roundIndex);
     input.dataset.match = String(matchIndex);
     input.dataset.player = String(playerIndex);
-    input.style.width = '64px';
-    input.style.height = '34px';
-    input.style.borderRadius = '10px';
-    input.style.border = '1px solid rgba(250,204,21,0.24)';
-    input.style.background = 'rgba(15,23,42,0.72)';
-    input.style.color = '#f8fafc';
-    input.style.textAlign = 'center';
-    input.style.fontWeight = '700';
-    input.style.fontSize = '14px';
 
+    // Prefer CSS control for sizing/appearance to avoid inline conflicts
+    // keep class 'score-input' and only set disabled programmatically
     if (disabled) {
       input.disabled = true;
     }
