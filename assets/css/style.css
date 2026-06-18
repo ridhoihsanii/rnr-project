@@ -929,6 +929,32 @@ button {
 .result-badge.win { background: #1db954; }
 .result-badge.lose { background: #e53935; }
 
+/* Bracket select and controls visibility and interactivity */
+.bracket-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: var(--bilpos-surface-2);
+  border: 1px solid var(--bilpos-border);
+  color: var(--text-primary);
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+  min-width: 140px;
+  z-index: 30;
+  position: relative;
+}
+.bracket-select option { background: var(--bilpos-dark); color: var(--text-primary); }
+
+.btn-playing, .match-toggle-dot, .live-btn { pointer-events: auto; }
+.score-input { display: inline-block; }
+
+/* Ensure clickable controls are above SVG connectors */
+.bracket-wrapper, .bracket-wrapper * { pointer-events: auto; }
+.connector-svg { pointer-events: none; }
+
 .match-footer {
   padding: 6px 10px;
   display: flex;
