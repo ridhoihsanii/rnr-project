@@ -1085,7 +1085,16 @@ button {
   stroke-linejoin: round;
 }
 
-.match-card { z-index: 2; position: relative; }
+.match-card { z-index: 200; position: relative; } 
+
+/* Ensure interactive controls are above connectors and not blocked */
+.match-card .btn-playing, .match-card .match-toggle-dot, .match-card .bracket-select, .match-card .score-input {
+  position: relative; z-index: 300; pointer-events: auto;
+}
+
+/* Make toggle dot easier to hit */
+.match-toggle-dot { width: 16px; height: 16px; }
+
 
 .bilpos-section { display: none; animation: fadeIn 0.3s ease; }
 
