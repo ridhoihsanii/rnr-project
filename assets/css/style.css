@@ -811,7 +811,8 @@ button {
   transition: var(--transition);
   cursor: pointer;
   position: relative;
-  width: 190px;
+  /* width is controlled by inline styles from the renderer; keep min-width to avoid collapsing */
+  min-width: 220px;
 }
 
 .match-card:hover {
@@ -891,6 +892,7 @@ button {
   color: var(--bilpos-yellow);
   white-space: nowrap;
   flex-shrink: 0;
+  margin-left: 8px;
 }
 
 .score-input {
