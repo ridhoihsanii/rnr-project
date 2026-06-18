@@ -261,30 +261,30 @@
       select.style.fontWeight = '700';
       select.style.fontSize = '0.9rem';
       select.style.padding = '4px 6px';
-      // Keep select available for programmatic population but hide it visually to allow inline editing
-      select.style.display = 'none';
+      // Show select dropdown (user preference) and keep editable hidden
+      select.style.display = 'inline-block';
       // Add placeholder empty option
       var emptyOpt = document.createElement('option');
       emptyOpt.value = '';
       emptyOpt.textContent = '';
       select.appendChild(emptyOpt);
 
-      // Create editable inline player name for quick typing
+      // Create editable inline player name (kept for compatibility but hidden)
       var editable = createElement('span', 'editable-player player-name');
-      editable.contentEditable = 'true';
+      editable.contentEditable = 'false';
       editable.dataset.round = String(roundIndex);
       editable.dataset.match = String(matchIndex);
       editable.dataset.player = String(playerIndex);
       editable.style.outline = 'none';
       editable.style.width = '100%';
-      editable.style.display = 'inline-block';
+      editable.style.display = 'none';
       editable.style.fontWeight = '700';
       editable.style.fontSize = '0.95rem';
       editable.textContent = (participant && participant.name && !isBye) ? participant.name : '';
 
       info.appendChild(slot);
-      info.appendChild(editable);
       info.appendChild(select);
+      info.appendChild(editable);
 
       if (participant && participant.hc !== '' && participant.hc != null) {
         badge = createElement('span', 'hc-badge', participant.hc);
@@ -293,7 +293,26 @@
 
       row.appendChild(info);
 
-      // Scores removed in manual mode
+      // Add score input for this player (manual mode) — enable editing unless match.done
+      var disabled = match && match.status === 'done';
+      appendScoreInput(row, match, roundIndex, matchIndex, playerIndex, disabled);
+
+      // Add result badge (WIN/LOSE) based on match.winner
+      var resultBadge = createElement('span', 'result-badge');
+      try {
+        if (match && match.winner) {
+          if (sameParticipant(match.winner, participant)) {
+            resultBadge.textContent = 'WIN';
+            resultBadge.classList.add('win');
+          } else {
+            resultBadge.textContent = 'LOSE';
+            resultBadge.classList.add('lose');
+          }
+        }
+      } catch (err) {}
+      resultBadge.style.marginLeft = '8px';
+      row.appendChild(resultBadge);
+
       return row;
     }
 

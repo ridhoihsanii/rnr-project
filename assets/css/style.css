@@ -922,6 +922,13 @@ button {
   margin: 0 10px;
 }
 
+/* Result badge for WIN/LOSE */
+.result-badge {
+  min-width:48px; text-align:center; padding:4px 6px; border-radius:6px; color:#fff; font-weight:700; margin-left:8px; display:inline-block;
+}
+.result-badge.win { background: #1db954; }
+.result-badge.lose { background: #e53935; }
+
 .match-footer {
   padding: 6px 10px;
   display: flex;
