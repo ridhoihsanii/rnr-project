@@ -42,30 +42,22 @@ function loadInitialState() {
   var size = parseInt(tournament_.size, 10) || 32;
 
   if (saved && saved.bracket && saved.bracket.size === size) {
-    // If all round-0 slots are BYE/null, regenerate so new drawingNumber mapping applies
+    // If all round-0 slots are empty/BYE, regenerate fresh bracket
     var round0 = saved.bracket.rounds && saved.bracket.rounds[0];
-    var allBye = round0 && round0.every(function(m) {
+    var allEmpty = !round0 || round0.every(function(m) {
       return (!m.p1 || !m.p1.id) && (!m.p2 || !m.p2.id);
     });
-    if (!allBye) {
+    if (!allEmpty) {
       bracket     = saved.bracket;
       liveMatchId = saved.liveMatchId || null;
     }
-  } else {
-    var filtered = participants
-      .filter(function(p) { return p && p.name && p.name.trim(); })
-      .map(function(p) {
-        // generateBracket uses drawingNumber; participant management uses slot — unify here
-        return Object.assign({}, p, {
-          drawingNumber: p.drawingNumber != null ? p.drawingNumber : p.slot
-        });
-      });
+  }
+
+  if (!bracket) {
+    // Generate empty bracket — participants assigned manually via Round 1 dropdowns
     bracket = window.BilposTournament
-      ? window.BilposTournament.generateBracket(size, filtered)
+      ? window.BilposTournament.generateBracket(size, [])
       : { rounds: [], size: size, generatedAt: Date.now() };
-    if (window.BilposTournament) {
-      window.BilposTournament.autoAdvanceByes(bracket);
-    }
   }
 
   return { bracket: bracket, liveMatchId: liveMatchId, participants: participants };

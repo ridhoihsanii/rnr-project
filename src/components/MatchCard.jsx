@@ -43,7 +43,7 @@ export default function MatchCard({
           usedParticipantIds={usedParticipantIds}
           onSelect={function(id) { onSelectParticipant(roundIdx, matchIdx, 1, id); }}
         />
-        {!p1IsBye && (
+        {!p1IsBye && (isFirstRound || (match.p1 && match.p1.id != null)) && (
           <ScoreInput
             value={match.score1}
             onChange={function(v) { onScoreChange(roundIdx, matchIdx, 1, v); }}
@@ -66,7 +66,7 @@ export default function MatchCard({
           usedParticipantIds={usedParticipantIds}
           onSelect={function(id) { onSelectParticipant(roundIdx, matchIdx, 2, id); }}
         />
-        {!p2IsBye && (
+        {!p2IsBye && (isFirstRound || (match.p2 && match.p2.id != null)) && (
           <ScoreInput
             value={match.score2}
             onChange={function(v) { onScoreChange(roundIdx, matchIdx, 2, v); }}

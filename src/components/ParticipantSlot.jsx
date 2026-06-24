@@ -7,7 +7,7 @@ export default function ParticipantSlot({
   var isBye = participant && participant.name === 'BYE';
 
   if (isFirstRound) {
-    var currentId = participant ? String(participant.id) : '';
+    var currentId = (participant && participant.id != null) ? String(participant.id) : '';
 
     var available = (participants || []).filter(function(p) {
       if (!p || !p.name || !p.name.trim()) return false;

@@ -229,8 +229,10 @@
 
 .participant-name {
   flex: 1;
-  font-size: 0.8rem;
+  min-width: 0;
+  font-size: 11px;
   font-weight: 500;
+  color: #e2e8f0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
