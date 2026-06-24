@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/bracket.css">
 </head>
 <body>
   <div class="bilpos-app">
@@ -27,11 +26,10 @@
           <div class="sidebar-nav-item" data-section="dashboard">Dashboard</div>
           <div class="sidebar-nav-item" data-section="setup">Tournament Setup</div>
           <div class="sidebar-nav-item" data-section="participants">List Peserta Bilpos</div>
-          <div class="sidebar-nav-item" data-section="bracket">Tournament Bracket</div>
-          <div class="sidebar-nav-item" data-section="wheel">Drawing</div>
         </nav>
       </div>
       <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
       </div>
     </header>
 
@@ -114,11 +112,6 @@
                   <option value="128">128 Players</option>
                 </select>
               </div>
-              <div class="d-flex gap-2 mt-3">
-                <button class="btn-bilpos-secondary" id="btn-generate-bracket">
-                  <i class="fas fa-sitemap me-1"></i> Generate Bracket
-                </button>
-              </div>
             </div>
           </div>
           <div class="col-lg-6">
@@ -175,63 +168,8 @@
         </div>
       </section>
 
-      <section class="bilpos-section bracket-section" id="section-bracket">
-        <div class="section-header">
-          <div class="section-title">
-            <i class="fas fa-sitemap"></i>
-            Tournament Bracket
-          </div>
-        </div>
-
-        <div class="bracket-controls" style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;color:var(--text-muted);font-weight:600">
-          <div>Bracket (Editable)</div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="display:flex;align-items:center;gap:8px;color:var(--text-secondary);font-weight:600">
-              <label for="zoom-range" style="font-size:0.85rem">Zoom</label>
-              <input id="zoom-range" type="range" min="65" max="100" value="100" style="width:160px" />
-              <span id="zoom-value" style="min-width:48px;text-align:right;color:var(--text-primary);font-weight:700">100%</span>
-            </div>
-            <button class="btn-bilpos-secondary" id="btn-fullscreen-bracket"><i class="fas fa-expand me-1"></i> Full Screen</button>
-          </div>
-        </div>
-
-        <div class="bracket-container" id="bracket-container">
-          <div id="bracket-render-area">
-            <div id="bracket-react-root"></div>
-          </div>
-        </div>
-      </section>
 
 
-      <!-- Embedded Drawing Wheel (bottom of page) -->
-      <section class="bilpos-section" id="section-wheel">
-        <div class="section-header">
-          <div class="section-title"><i class="fas fa-dice"></i> Drawing</div>
-        </div>
-        <div class="wheel-panel" style="margin:8px 0 24px;">
-          <div class="wheel-body">
-            <canvas id="wheel-canvas" width="600" height="600"></canvas>
-            <button id="btn-spin-wheel" class="wheel-spin-btn" title="Spin">SPIN</button>
-          </div>
-          <div class="wheel-controls">
-            <!-- removed individual remove button; use popup Hapus instead -->
-          </div>
-        </div>
-      </section>
-
-          <!-- Result modal -->
-          <div id="wheel-result-modal" class="wheel-result-modal">
-            <div class="wheel-result-panel">
-              <div class="wheel-result-header">Kita punya pemenang!</div>
-              <div class="wheel-result-body">
-                <div class="result-number" style="font-size:48px;font-weight:800;color:#fff;text-align:center">0</div>
-              </div>
-              <div class="wheel-result-actions">
-                <button id="btn-close-result" class="btn-bilpos-secondary">Tutup</button>
-                <button id="btn-delete-result" class="btn-bilpos-primary">Hapus</button>
-              </div>
-            </div>
-          </div>
 
       <footer class="bilpos-footer mt-4">
         Built with <span class="heart">❤️</span> by <span>Ihsan</span>
@@ -239,18 +177,13 @@
     </main>
   </div>
 
-  <script src="assets/js/bracket.bundle.js" defer></script>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="assets/js/storage.js"></script>
-  <script src="assets/js/drawing.js"></script>
-  <script src="assets/js/tournament.js"></script>
-  <script src="assets/js/bracket.js"></script>
   <script src="assets/js/ui.js"></script>
-  <script src="assets/js/wheel.js"></script>
+  <script src="assets/js/theme.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

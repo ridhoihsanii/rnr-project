@@ -25,6 +25,25 @@
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
   --shadow-yellow: 0 0 20px rgba(250,204,21,0.2);
   --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+
+  /* Theme mapping used by data-theme attribute */
+  --bg: #000;
+  --bg-alt: #111111;
+  --surface: var(--bilpos-surface);
+  --surface-2: var(--bilpos-surface-2);
+  --text: var(--text-primary);
+  --accent: var(--bilpos-yellow);
+}
+
+[data-theme="light"] {
+  --bg: #f8fafc;
+  --bg-alt: #f1f5f9;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --bilpos-border: #e2e8f0;
+  --accent: var(--bilpos-yellow);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,12 +57,13 @@ html {
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: #000;
-  color: var(--text-primary);
+  background: var(--bg);
+  color: var(--text);
   overflow-x: hidden;
   font-size: 14px;
   line-height: 1.5;
   letter-spacing: 0.01em;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 img, svg, video, canvas { display: block; max-width: 100%; }
@@ -1569,8 +1589,228 @@ button {
   .stat-card { padding: 14px; }
   .stat-value { font-size: 1.3rem; }
   .stat-icon { width: 40px; height: 40px; font-size: 1rem; }
-  .bracket-container { min-height: 400px; }
   .settings-item { flex-direction: column; align-items: flex-start; }
   #toast-container { left: 12px; right: 12px; }
   .bilpos-toast { min-width: 0; max-width: none; width: 100%; }
 }
+
+/* ── Theme Toggle Button ─────────────────────────────────── */
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--bilpos-surface);
+  border: 1px solid var(--bilpos-border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--bilpos-yellow);
+  color: var(--bilpos-yellow);
+  background: rgba(250,204,21,0.08);
+}
+
+/* ── Light Mode Overrides ────────────────────────────────── */
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="light"] body {
+  background: var(--bg);
+  color: #0f172a;
+}
+
+[data-theme="light"] .bilpos-header {
+  background: rgba(248,250,252,0.9);
+  border-bottom-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .bilpos-header::after {
+  background: linear-gradient(90deg, transparent, rgba(234,179,8,0.35), transparent);
+}
+
+[data-theme="light"] .bilpos-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .bilpos-card::before {
+  background: linear-gradient(90deg, transparent, rgba(234,179,8,0.3), transparent);
+}
+
+[data-theme="light"] .stat-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .bilpos-main {
+  background: #f8fafc;
+}
+
+[data-theme="light"] .section-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .stat-label {
+  color: #64748b;
+}
+
+[data-theme="light"] .stat-value {
+  color: #0f172a;
+}
+
+[data-theme="light"] .participant-table thead th {
+  background: #fef9c3;
+  color: #92400e;
+}
+
+[data-theme="light"] .participant-table tbody tr {
+  border-bottom-color: #f1f5f9;
+}
+
+[data-theme="light"] .participant-table tbody tr:hover {
+  background: #fef9c3;
+}
+
+[data-theme="light"] .participant-table tbody td {
+  color: #0f172a;
+}
+
+[data-theme="light"] .row-number {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .table-input {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .table-input:focus {
+  background: #fef9c3;
+  border-color: var(--bilpos-yellow);
+}
+
+[data-theme="light"] .table-input::placeholder { color: #94a3b8; }
+
+[data-theme="light"] .table-select {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .table-select option { background: #ffffff; color: #0f172a; }
+
+[data-theme="light"] .bilpos-input {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .bilpos-input::placeholder { color: #94a3b8; }
+
+[data-theme="light"] .bilpos-select {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .bilpos-select option { background: #ffffff; color: #0f172a; }
+
+[data-theme="light"] .search-input {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .search-input::placeholder { color: #94a3b8; }
+
+[data-theme="light"] .search-input:focus {
+  background: #fef9c3;
+  border-color: var(--bilpos-yellow);
+}
+
+[data-theme="light"] .participant-scroll-wrapper {
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .card-header-bilpos {
+  border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .card-header-bilpos h5 {
+  color: #0f172a;
+}
+
+[data-theme="light"] .bilpos-label { color: #64748b; }
+
+[data-theme="light"] .top-taskbar .sidebar-nav-item {
+  color: #475569;
+}
+
+[data-theme="light"] .top-taskbar .sidebar-nav-item:hover {
+  color: #0f172a;
+  background: rgba(234,179,8,0.08);
+}
+
+[data-theme="light"] .top-taskbar .sidebar-nav-item.active {
+  color: #92400e;
+  background: rgba(234,179,8,0.12);
+  border-color: rgba(234,179,8,0.25);
+}
+
+[data-theme="light"] .header-brand {
+  color: var(--bilpos-gold);
+}
+
+[data-theme="light"] .brand-sub {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .theme-toggle {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .status-btn {
+  border-color: #e2e8f0;
+  color: #94a3b8;
+}
+
+[data-theme="light"] .btn-bilpos-secondary {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .btn-bilpos-secondary:hover {
+  border-color: var(--bilpos-yellow);
+  color: var(--bilpos-gold);
+}
+
+[data-theme="light"] .hc-custom-input {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
+}
+
+[data-theme="light"] .bilpos-footer {
+  border-top-color: rgba(234,179,8,0.2);
+  color: #94a3b8;
+}
+
+[data-theme="light"] .section-subtitle { color: #94a3b8; }
+
+[data-theme="light"] .empty-state { color: #94a3b8; }
+[data-theme="light"] .empty-state h5 { color: #64748b; }
+[data-theme="light"] .empty-state p { color: #94a3b8; }
