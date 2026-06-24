@@ -212,6 +212,11 @@
   font-family: inherit;
 }
 
+.participant-select option {
+  background-color: #0d1b2a;
+  color: #c8d8e8;
+}
+
 .participant-select:focus {
   border-color: rgba(250, 204, 21, 0.4);
 }
