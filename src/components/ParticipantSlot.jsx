@@ -2,7 +2,7 @@ import React from 'react';
 import { getParticipantLabel } from './bracketUtils';
 
 export default function ParticipantSlot({
-  participant, isFirstRound, participants, usedInRound1, onSelect,
+  participant, isFirstRound, participants, usedParticipantIds, onSelect,
 }) {
   var isBye = participant && participant.name === 'BYE';
 
@@ -15,7 +15,7 @@ export default function ParticipantSlot({
 
     var available = (participants || []).filter(function(p) {
       if (!p || !p.name || !p.name.trim()) return false;
-      return !usedInRound1.has(String(p.id)) || String(p.id) === currentId;
+      return !(usedParticipantIds || new Set()).has(String(p.id)) || String(p.id) === currentId;
     });
 
     return (
@@ -41,5 +41,5 @@ export default function ParticipantSlot({
     return <span className="participant-label tbd">TBD</span>;
   }
 
-  return <span className="participant-label">{getParticipantLabel(participant)}</span>;
+  return <span className="participant-name">{getParticipantLabel(participant)}</span>;
 }

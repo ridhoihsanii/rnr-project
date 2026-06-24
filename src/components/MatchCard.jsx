@@ -4,9 +4,10 @@ import ScoreInput from './ScoreInput';
 
 export default function MatchCard({
   match, matchNum, roundIdx, matchIdx,
-  isFirstRound, participants, usedInRound1,
-  isLive, onScoreChange, onSelectParticipant, onToggleLive,
+  isFirstRound, participants, usedParticipantIds,
+  liveMatchId, onScoreChange, onSelectParticipant, onToggleLive,
 }) {
+  const isLive = match.id === liveMatchId;
   var winner    = match.winner;
   var p1IsWin   = winner && match.p1 && String(winner.id) === String(match.p1.id);
   var p2IsWin   = winner && match.p2 && String(winner.id) === String(match.p2.id);
@@ -17,7 +18,7 @@ export default function MatchCard({
   var isByeMatch = p1IsBye || p2IsBye;
 
   return (
-    <div className={'match-card' + (isLive ? ' live' : '')}>
+    <div className={'match-card' + (isLive ? ' is-live' : '')}>
 
       {/* Header */}
       <div className="match-header">
@@ -38,7 +39,7 @@ export default function MatchCard({
           participant={match.p1}
           isFirstRound={isFirstRound}
           participants={participants}
-          usedInRound1={usedInRound1}
+          usedParticipantIds={usedParticipantIds}
           onSelect={function(id) { onSelectParticipant(roundIdx, matchIdx, 1, id); }}
         />
         {!p1IsBye && (
@@ -48,7 +49,7 @@ export default function MatchCard({
             disabled={false}
           />
         )}
-        {bothScored && (
+        {bothScored && match.winner && (
           <span className={'badge ' + (p1IsWin ? 'win' : 'lose')}>
             {p1IsWin ? 'WIN' : 'LOSE'}
           </span>
@@ -61,7 +62,7 @@ export default function MatchCard({
           participant={match.p2}
           isFirstRound={isFirstRound}
           participants={participants}
-          usedInRound1={usedInRound1}
+          usedParticipantIds={usedParticipantIds}
           onSelect={function(id) { onSelectParticipant(roundIdx, matchIdx, 2, id); }}
         />
         {!p2IsBye && (
@@ -71,7 +72,7 @@ export default function MatchCard({
             disabled={false}
           />
         )}
-        {bothScored && (
+        {bothScored && match.winner && (
           <span className={'badge ' + (p2IsWin ? 'win' : 'lose')}>
             {p2IsWin ? 'WIN' : 'LOSE'}
           </span>
