@@ -1,17 +1,22 @@
+﻿## Task 3: Bracket.css
+
+**Files:**
+- Modify (replace): `src/components/Bracket.css`
+
+**Interfaces:**
+- Produces CSS classes consumed by all bracket React components
+- Key classes: `.bracket-view`, `.round-column`, `.round-label`, `.match-wrapper`, `.match-wrapper.connector-top`, `.match-wrapper.connector-bottom`, `.match-wrapper.has-left-arm`, `.match-card`, `.match-card.live`, `.match-header`, `.match-number`, `.live-btn`, `.live-btn.active`, `.match-slot`, `.match-slot.winner-slot`, `.match-slot.loser-slot`, `.participant-select`, `.participant-label`, `.participant-label.tbd`, `.participant-label.bye`, `.score-input`, `.badge.win`, `.badge.lose`, `.bracket-empty`
+
+- [ ] **Step 1: Replace the full contents of `src/components/Bracket.css`**
+
+```css
 /* ================================================================
-   BILPOS Tournament Bracket – React Component Styles
+   BILPOS Tournament Bracket â€” React Component Styles
    Constants (must match bracketUtils.js): CARD_HEIGHT=100px, CARD_GAP=8px,
    ROUND_GAP=48px, ARM_LENGTH=24px
    ================================================================ */
 
-/* ──── Bracket scroll container (outer wrapper for horizontal scrolling) ──── */
-.bracket-scroll-container {
-  overflow-x: auto;
-  overflow-y: visible;
-  width: 100%;
-}
-
-/* ──── Horizontal scroll container ──────────────────────────────── */
+/* â”€â”€ Horizontal scroll container â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bracket-view {
   display: flex;
   flex-direction: row;
@@ -24,14 +29,13 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* ──── Round column ────────────────────────────────────────────── */
+/* â”€â”€ Round column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .round-column {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   width: 260px;
   overflow: visible;
-  gap: 8px; /* = CARD_GAP */
 }
 
 .round-label {
@@ -48,14 +52,14 @@
   white-space: nowrap;
 }
 
-/* ──── Match wrapper (position anchor for connector lines) ────── */
+/* â”€â”€ Match wrapper (position anchor for connector lines) â”€â”€â”€â”€â”€â”€â”€ */
 .match-wrapper {
   position: relative;
   overflow: visible;
   width: 260px;
 }
 
-/* Left arm: midpoint of gap → left edge of card (round 2+) */
+/* Left arm: midpoint of gap â†’ left edge of card (round 2+) */
 .match-wrapper.has-left-arm::before {
   content: '';
   position: absolute;
@@ -91,10 +95,10 @@
   border-right: 2px solid rgba(55, 75, 100, 0.85);
 }
 
-/* ──── Match card ─────────────────────────────────────────────── */
+/* â”€â”€ Match card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .match-card {
   width: 260px;
-  height: 100px; /* = CARD_HEIGHT – must match bracketUtils.CARD_HEIGHT */
+  height: 100px; /* = CARD_HEIGHT â€” must match bracketUtils.CARD_HEIGHT */
   background: linear-gradient(135deg, #0d1b2a 0%, #0a1520 100%);
   border-radius: 10px;
   border: 1.5px solid rgba(255, 255, 255, 0.06);
@@ -111,8 +115,8 @@
   border-color: rgba(250, 204, 21, 0.2);
 }
 
-/* ──── LIVE blinking animation ────────────────────────────────── */
-.match-card.is-live {
+/* â”€â”€ LIVE blinking animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.match-card.live {
   animation: liveBlink 1s ease-in-out infinite;
 }
 
@@ -128,7 +132,7 @@
   }
 }
 
-/* ──── Match header row ───────────────────────────────────────── */
+/* â”€â”€ Match header row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .match-header {
   display: flex;
   justify-content: space-between;
@@ -144,7 +148,7 @@
   text-transform: uppercase;
 }
 
-/* ──── LIVE button ────────────────────────────────────────────── */
+/* â”€â”€ LIVE button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .live-btn {
   font-size: 9px;
   font-weight: 700;
@@ -174,7 +178,7 @@
   cursor: default;
 }
 
-/* ──── Participant slot row ──────────────────────────────────── */
+/* â”€â”€ Participant slot row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .match-slot {
   display: flex;
   align-items: center;
@@ -197,7 +201,7 @@
   border-left-color: rgba(239, 68, 68, 0.25);
 }
 
-/* ──── Participant display ───────────────────────────────────── */
+/* â”€â”€ Participant display â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .participant-select {
   flex: 1;
   min-width: 0;
@@ -237,7 +241,7 @@
   font-style: italic;
 }
 
-/* ──── Score input ────────────────────────────────────────────── */
+/* â”€â”€ Score input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .score-input {
   width: 40px;
   flex-shrink: 0;
@@ -266,7 +270,7 @@
   -moz-appearance: textfield;
 }
 
-/* ──── WIN / LOSE badges ──────────────────────────────────────── */
+/* â”€â”€ WIN / LOSE badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   flex-shrink: 0;
   font-size: 8px;
@@ -289,7 +293,7 @@
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-/* ──── Empty state ────────────────────────────────────────────── */
+/* â”€â”€ Empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bracket-empty {
   text-align: center;
   padding: 64px 24px;
@@ -305,7 +309,7 @@
   font-size: 14px;
 }
 
-/* ──── Responsive ─────────────────────────────────────────────── */
+/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 767px) {
   .bracket-view {
     padding: 16px;
@@ -324,7 +328,7 @@
   .participant-label { font-size: 9px; }
 }
 
-/* ──── Light theme overrides ──────────────────────────────────── */
+/* â”€â”€ Light theme overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 [data-theme='light'] .match-card {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-color: #e2e8f0;
@@ -371,3 +375,22 @@
 [data-theme='light'] .round-label {
   background: rgba(250, 204, 21, 0.12);
 }
+```
+
+- [ ] **Step 2: Run the build to verify CSS compiles without errors**
+
+```
+npm run build
+```
+
+Expected: exits with code 0. Output: `assets/js/bracket.bundle.js` and `assets/js/bracket.bundle.css` regenerated.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add src/components/Bracket.css
+git commit -m "feat: add Challonge-style bracket CSS with pseudo-element connectors"
+```
+
+---
+
