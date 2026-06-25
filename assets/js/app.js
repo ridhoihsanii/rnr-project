@@ -15,6 +15,15 @@
     return document.getElementById(id);
   }
 
+  function dispatchBracketActivated() {
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      var event = typeof CustomEvent === 'function'
+        ? new CustomEvent('bilpos:bracket-activated')
+        : { type: 'bilpos:bracket-activated' };
+      window.dispatchEvent(event);
+    }
+  }
+
   function getKnownHcValue(participant) {
     var hcValues = ['HC 3B', 'HC 3N', 'HC 3A', 'HC 3+', 'custom'];
     var hc = participant && participant.hc != null ? String(participant.hc) : '';
@@ -261,6 +270,7 @@
           var size = parseInt(e.target.value, 10);
           self.tournament.size = size;
           BilposStorage.saveTournament(self.tournament);
+          dispatchBracketActivated();
           self.renderParticipantTable();
           self.renderStats();
         });

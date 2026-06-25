@@ -201,12 +201,19 @@ function loadApp(options) {
   const toastCalls = [];
   const savedParticipantsCalls = [];
   const savedBracketCalls = [];
+  const dispatchedEvents = [];
   let participants = config.participants ? config.participants.slice() : [];
+
+  window.addEventListener = function(eventName, handler) {};
+  window.dispatchEvent = function(event) {
+    dispatchedEvents.push(event && event.type ? event.type : String(event));
+  };
 
   const context = {
     window: window,
     document: document,
     console: console,
+    CustomEvent: function(type) { return { type: type }; },
     BilposStorage: {
       loadTournament: function () {
         return { size: 2, venue: '', status: '' };
@@ -220,6 +227,7 @@ function loadApp(options) {
       loadSettings: function () {
         return { zoom: 100 };
       },
+      saveTournament: function(data) {},
       saveParticipants: function (nextParticipants) {
         participants = nextParticipants;
         savedParticipantsCalls.push(nextParticipants);
@@ -246,7 +254,8 @@ function loadApp(options) {
     BilposUI: {
       showToast: function (message, type) {
         toastCalls.push({ message: message, type: type });
-      }
+      },
+      updateHeader: function() {}
     }
   };
 
@@ -263,7 +272,9 @@ function loadApp(options) {
   return {
     BilposApp: context.window.BilposApp,
     document: document,
+    window: window,
     toastCalls: toastCalls,
+    dispatchedEvents: dispatchedEvents,
     getSavedParticipantsCalls: function () {
       return savedParticipantsCalls;
     },
@@ -359,4 +370,26 @@ test('score change keeps partial scores live without advancing winner', () => {
   assert.equal(app.bracket.rounds[0][0].winner, null);
   assert.equal(app.bracket.rounds[0][0].status, 'live');
   assert.equal(advanceCalls.length, 0);
+});
+
+test('size change dispatches bilpos:bracket-activated event', () => {
+  const loaded = loadApp();
+  const app = loaded.BilposApp;
+
+  app.tournament = { size: 32, fee: 0 };
+  app.renderParticipantTable = function() {};
+  app.renderStats = function() {};
+
+  appendElement(loaded.document, 'input', { id: 'input-size', value: '16' });
+
+  app.wireEvents();
+
+  const sizeInput = loaded.document.getElementById('input-size');
+  sizeInput.value = '16';
+  sizeInput.dispatchEvent('change', { target: sizeInput });
+
+  assert.ok(
+    loaded.dispatchedEvents.includes('bilpos:bracket-activated'),
+    'Expected bilpos:bracket-activated to be dispatched when size changes'
+  );
 });
