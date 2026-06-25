@@ -224,7 +224,7 @@
 .participant-label {
   flex: 1;
   min-width: 0;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   color: #e2e8f0;
   white-space: nowrap;
@@ -235,7 +235,7 @@
 .participant-name {
   flex: 1;
   min-width: 0;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   color: #e2e8f0;
   overflow: hidden;
@@ -257,6 +257,7 @@
 .score-input {
   width: 40px;
   flex-shrink: 0;
+  margin-left: auto;
   padding: 3px 2px;
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.07);
@@ -291,6 +292,8 @@
   border-radius: 4px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+  min-width: 36px;
+  text-align: center;
 }
 
 .badge.win {
