@@ -1,0 +1,85 @@
+﻿=== COMMITS ===
+943735f fix: improve bracket connector line visibility and close junction gap
+
+=== STAT ===
+ src/components/Bracket.css | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+=== DIFF ===
+diff --git a/src/components/Bracket.css b/src/components/Bracket.css
+index 13cdd5c..250c0a5 100644
+--- a/src/components/Bracket.css
++++ b/src/components/Bracket.css
+@@ -56,46 +56,46 @@
+ }
+ 
+ /* Left arm: midpoint of gap → left edge of card (round 2+) */
+ .match-wrapper.has-left-arm::before {
+   content: '';
+   position: absolute;
+   top: 50%;
+   left: -24px; /* = -ARM_LENGTH */
+   width: 24px;
+   height: 2px;
+-  background: rgba(55, 75, 100, 0.85);
++  background: rgba(100, 140, 180, 0.9);
+   transform: translateY(-50%);
+ }
+ 
+ /* Right arm + vertical going DOWN (even match, non-final round) */
+ .match-wrapper.connector-top::after {
+   content: '';
+   position: absolute;
+   top: 50%; /* card vertical center */
+   right: -24px; /* right edge of arm starts at card.right */
+   width: 24px; /* = ARM_LENGTH */
+   height: var(--connector-h, 54px);
+-  border-top: 2px solid rgba(55, 75, 100, 0.85);
+-  border-right: 2px solid rgba(55, 75, 100, 0.85);
++  border-top: 2px solid rgba(100, 140, 180, 0.9);
++  border-right: 2px solid rgba(100, 140, 180, 0.9);
+ }
+ 
+ /* Right arm + vertical going UP (odd match, non-final round) */
+ .match-wrapper.connector-bottom::after {
+   content: '';
+   position: absolute;
+   bottom: 50%; /* card vertical center */
+   right: -24px;
+   width: 24px;
+-  height: var(--connector-h, 54px);
+-  border-bottom: 2px solid rgba(55, 75, 100, 0.85);
+-  border-right: 2px solid rgba(55, 75, 100, 0.85);
++  height: calc(var(--connector-h, 54px) + 2px);
++  border-bottom: 2px solid rgba(100, 140, 180, 0.9);
++  border-right: 2px solid rgba(100, 140, 180, 0.9);
+ }
+ 
+ /* ──── Match card ─────────────────────────────────────────────── */
+ .match-card {
+   width: 260px;
+   height: 100px; /* = CARD_HEIGHT – must match bracketUtils.CARD_HEIGHT */
+   background: linear-gradient(135deg, #0d1b2a 0%, #0a1520 100%);
+   border-radius: 10px;
+   border: 1.5px solid rgba(255, 255, 255, 0.06);
+   padding: 8px 10px;
+@@ -373,17 +373,17 @@
+   border-color: #cbd5e1;
+ }
+ 
+ [data-theme='light'] .match-number {
+   color: #94a3b8;
+ }
+ 
+ [data-theme='light'] .match-wrapper.has-left-arm::before,
+ [data-theme='light'] .match-wrapper.connector-top::after,
+ [data-theme='light'] .match-wrapper.connector-bottom::after {
+-  border-color: #cbd5e1;
+-  background-color: #cbd5e1;
++  border-color: #8a9bb0;
++  background-color: #8a9bb0;
+ }
+ 
+ [data-theme='light'] .round-label {
+   background: rgba(250, 204, 21, 0.12);
+ }

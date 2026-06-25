@@ -1,0 +1,92 @@
+﻿=== COMMITS ===
+74993dd fix: fix match card font size and score alignment after match result
+
+=== STAT ===
+ src/components/Bracket.css | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+=== DIFF ===
+diff --git a/src/components/Bracket.css b/src/components/Bracket.css
+index 250c0a5..dcf2aa1 100644
+--- a/src/components/Bracket.css
++++ b/src/components/Bracket.css
+@@ -217,32 +217,32 @@
+   color: #c8d8e8;
+ }
+ 
+ .participant-select:focus {
+   border-color: rgba(250, 204, 21, 0.4);
+ }
+ 
+ .participant-label {
+   flex: 1;
+   min-width: 0;
+-  font-size: 11px;
++  font-size: 10px;
+   font-weight: 500;
+   color: #e2e8f0;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+ 
+ .participant-name {
+   flex: 1;
+   min-width: 0;
+-  font-size: 11px;
++  font-size: 10px;
+   font-weight: 500;
+   color: #e2e8f0;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+ }
+ 
+ .participant-label.tbd {
+   color: #3a4f65;
+   font-style: italic;
+@@ -250,20 +250,21 @@
+ 
+ .participant-label.bye {
+   color: #3a4f65;
+   font-style: italic;
+ }
+ 
+ /* ──── Score input ────────────────────────────────────────────── */
+ .score-input {
+   width: 40px;
+   flex-shrink: 0;
++  margin-left: auto;
+   padding: 3px 2px;
+   border-radius: 5px;
+   background: rgba(255, 255, 255, 0.07);
+   color: #fff;
+   border: 1px solid rgba(255, 255, 255, 0.1);
+   font-size: 12px;
+   font-weight: 700;
+   text-align: center;
+   outline: none;
+   font-family: inherit;
+@@ -284,20 +285,22 @@
+ 
+ /* ──── WIN / LOSE badges ──────────────────────────────────────── */
+ .badge {
+   flex-shrink: 0;
+   font-size: 8px;
+   font-weight: 700;
+   padding: 2px 5px;
+   border-radius: 4px;
+   letter-spacing: 0.5px;
+   text-transform: uppercase;
++  min-width: 36px;
++  text-align: center;
+ }
+ 
+ .badge.win {
+   background: rgba(34, 197, 94, 0.18);
+   color: #22c55e;
+   border: 1px solid rgba(34, 197, 94, 0.3);
+ }
+ 
+ .badge.lose {
+   background: rgba(239, 68, 68, 0.12);
