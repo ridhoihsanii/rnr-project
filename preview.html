@@ -322,10 +322,13 @@
 
 <div id="bracket-root"></div>
 
-<div class="qr-card" id="qr-card" style="display:none">
-  <div class="qr-title">Scan to share</div>
-  <canvas id="qr-canvas"></canvas>
-  <button class="qr-copy" id="qr-copy-btn">Copy link</button>
+<div class="qr-card" id="qr-card">
+  <div class="qr-title">📲 Scan to Share</div>
+  <div id="qr-wrap" style="display:flex;align-items:center;justify-content:center;min-width:140px;min-height:140px;">
+    <span id="qr-status" style="font-size:10px;color:#64748b;text-align:center;">Generating QR…</span>
+  </div>
+  <canvas id="qr-canvas" style="display:none"></canvas>
+  <button class="qr-copy" id="qr-copy-btn">📋 Copy link</button>
 </div>
 
 <script>
@@ -538,21 +541,29 @@ function buildMatchCard(match, matchNum, liveMatchId) {
 
 // ── QR code ────────────────────────────────────────────────────────────
 function initQR() {
-  var url = window.location.href;
-  var card = document.getElementById('qr-card');
-  var canvas = document.getElementById('qr-canvas');
+  var url     = window.location.href;
+  var canvas  = document.getElementById('qr-canvas');
+  var wrap    = document.getElementById('qr-wrap');
+  var status  = document.getElementById('qr-status');
   var copyBtn = document.getElementById('qr-copy-btn');
 
   if (typeof QRCode !== 'undefined') {
     QRCode.toCanvas(canvas, url, {
-      width: 160,
+      width: 148,
       margin: 1,
+      errorCorrectionLevel: 'L',   // lowest EC = max data capacity
       color: { dark: '#0f172a', light: '#ffffff' }
     }, function(err) {
-      if (!err) card.style.display = 'flex';
+      if (err) {
+        // URL too long for QR — show friendly fallback
+        wrap.innerHTML = '<span style="font-size:9px;color:#dc2626;text-align:center;padding:8px;">URL terlalu panjang<br>untuk QR code.<br>Gunakan tombol<br>Copy link.</span>';
+      } else {
+        wrap.style.display = 'none';
+        canvas.style.display = 'block';
+      }
     });
   } else {
-    card.style.display = 'none';
+    status.textContent = 'QR tidak tersedia.';
   }
 
   copyBtn.addEventListener('click', function() {
