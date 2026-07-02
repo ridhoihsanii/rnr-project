@@ -1,4 +1,5 @@
 import React from 'react';
+import './Bracket.css';
 import RoundColumn from './RoundColumn';
 
 export default function BracketView({

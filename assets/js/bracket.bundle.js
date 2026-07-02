@@ -23510,6 +23510,12 @@
     }
   });
 
+  // src/components/Bracket.css
+  var init_Bracket = __esm({
+    "src/components/Bracket.css"() {
+    }
+  });
+
   // src/components/bracketUtils.js
   var require_bracketUtils = __commonJS({
     "src/components/bracketUtils.js"(exports, module) {
@@ -23860,6 +23866,7 @@
   var init_BracketView = __esm({
     "src/components/BracketView.jsx"() {
       import_react5 = __toESM(require_react());
+      init_Bracket();
       init_RoundColumn();
     }
   });
