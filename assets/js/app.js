@@ -563,17 +563,23 @@
       var previewBtn = getElement('btn-preview-bracket');
       if (previewBtn) {
         previewBtn.addEventListener('click', function () {
-          var saved      = window.BilposStorage ? BilposStorage.loadBracket()     : null;
-          var tournament = window.BilposStorage ? BilposStorage.loadTournament()  : {};
-          var payload    = JSON.stringify({
-            bracket:      saved && saved.bracket   ? saved.bracket   : null,
+          var saved      = window.BilposStorage ? BilposStorage.loadBracket()    : null;
+          var tournament = window.BilposStorage ? BilposStorage.loadTournament() : {};
+          var payloadObj = {
+            bracket:      saved && saved.bracket      ? saved.bracket      : null,
             liveMatchIds: saved && saved.liveMatchIds ? saved.liveMatchIds : [],
             tournament:   tournament
-          });
-          var compressed = window.LZString
-            ? LZString.compressToEncodedURIComponent(payload)
-            : encodeURIComponent(payload);
-          window.open('preview.html#' + compressed, '_blank');
+          };
+
+          if (window.BilposFirebase) {
+            BilposFirebase.openPreview(payloadObj);
+          } else {
+            // Fallback: hash-based URL
+            var compressed = window.LZString
+              ? LZString.compressToEncodedURIComponent(JSON.stringify(payloadObj))
+              : encodeURIComponent(JSON.stringify(payloadObj));
+            window.open('preview.html#' + compressed, '_blank');
+          }
         });
       }
     },

@@ -8,6 +8,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <!-- Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey:            'AIzaSyA6h6oCHrKixtZMEyqufpaZsaBrdrtBL1Y',
+      authDomain:        'bilpos-tournament.firebaseapp.com',
+      databaseURL:       'https://bilpos-tournament-default-rtdb.firebaseio.com',
+      projectId:         'bilpos-tournament',
+      storageBucket:     'bilpos-tournament.firebasestorage.app',
+      messagingSenderId: '1016029844462',
+      appId:             '1:1016029844462:web:159e221b47c584eed0b4ff'
+    });
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -757,12 +771,74 @@ function initQR() {
   setTimeout(autoFit, 250);
 })();
 
-// ── Main: decode URL hash and render ──────────────────────────────────
+// ── Main: Firebase (?id=) atau hash fallback ──────────────────────────
 (function() {
+  /* ── QR toggle (shared antara kedua mode) ── */
+  var qrCard   = document.getElementById('qr-card');
+  var qrBtn    = document.getElementById('btn-qr');
+  var qrClose  = document.getElementById('qr-close');
+  var qrInited = false;
+
+  function showQR() {
+    qrCard.style.display = 'flex';
+    if (!qrInited) { initQR(); qrInited = true; }
+  }
+  function hideQR() { qrCard.style.display = 'none'; }
+  qrBtn.addEventListener('click', function() {
+    if (qrCard.style.display === 'none' || !qrCard.style.display) showQR();
+    else hideQR();
+  });
+  qrClose.addEventListener('click', hideQR);
+
+  /* ── Helper: terapkan data bracket ke halaman ── */
+  function applyPayload(data) {
+    if (!data) return;
+    var title = (data.tournament && (data.tournament.venue || data.tournament.name)) || 'BILPOS Tournament';
+    document.getElementById('preview-title').textContent = title;
+    document.title = title + ' — Bracket Preview';
+    var root = document.getElementById('bracket-root');
+    root.innerHTML = '';
+    var ids = Array.isArray(data.liveMatchIds) ? data.liveMatchIds : [];
+    renderBracket(data.bracket, ids);
+    if (typeof window.__bilposAutoFit === 'function') setTimeout(window.__bilposAutoFit, 100);
+  }
+
+  /* ── Mode 1: Firebase — URL pendek, real-time cross-device ── */
+  var searchParams = new URLSearchParams(window.location.search);
+  var firebaseId   = searchParams.get('id');
+
+  if (firebaseId) {
+    if (typeof firebase !== 'undefined') {
+      try {
+        var db = firebase.database();
+        db.ref('brackets/' + firebaseId).on('value', function(snapshot) {
+          var data = snapshot.val();
+          if (!data || !data.bracket) {
+            document.getElementById('bracket-root').innerHTML =
+              '<div class="empty-state"><div class="icon">⏳</div><p>Bracket belum tersedia. Buka halaman utama dan klik PREVIEW terlebih dahulu.</p></div>';
+            return;
+          }
+          applyPayload(data);
+        }, function(err) {
+          document.getElementById('bracket-root').innerHTML =
+            '<div class="empty-state"><div class="icon">⚠️</div><p>Gagal memuat dari Firebase: ' + err.message + '</p></div>';
+        });
+      } catch(e) {
+        document.getElementById('bracket-root').innerHTML =
+          '<div class="empty-state"><div class="icon">⚠️</div><p>Firebase error: ' + e.message + '</p></div>';
+      }
+    } else {
+      document.getElementById('bracket-root').innerHTML =
+        '<div class="empty-state"><div class="icon">⚠️</div><p>Firebase SDK belum dimuat.</p></div>';
+    }
+    return; // QR & toggle sudah selesai
+  }
+
+  /* ── Mode 2: Hash fallback (URL lama / backward compat) ── */
   var hash = window.location.hash.slice(1);
   if (!hash) {
     document.getElementById('bracket-root').innerHTML =
-      '<div class="empty-state"><div class="icon">🔗</div><p>Tidak ada data bracket di URL ini. Buka halaman utama Bilpos Tournament dan klik tombol Preview.</p></div>';
+      '<div class="empty-state"><div class="icon">🔗</div><p>Tidak ada data bracket. Buka halaman utama dan klik tombol PREVIEW.</p></div>';
     return;
   }
 
@@ -778,48 +854,15 @@ function initQR() {
     return;
   }
 
-  // Set title
-  var title = (payload.tournament && (payload.tournament.venue || payload.tournament.name)) || 'BILPOS Tournament';
-  document.getElementById('preview-title').textContent = title;
-  document.title = title + ' — Bracket Preview';
+  applyPayload(payload);
 
-  // Render bracket
-  var liveMatchIds = Array.isArray(payload.liveMatchIds)
-    ? payload.liveMatchIds
-    : (payload.liveMatchId ? [payload.liveMatchId] : []);
-  renderBracket(payload.bracket, liveMatchIds);
-
-  // ── QR toggle ──────────────────────────────────────────────────────────
-  var qrCard    = document.getElementById('qr-card');
-  var qrBtn     = document.getElementById('btn-qr');
-  var qrClose   = document.getElementById('qr-close');
-  var qrInited  = false;
-
-  function showQR() {
-    qrCard.style.display = 'flex';
-    if (!qrInited) { initQR(); qrInited = true; }
-  }
-  function hideQR() { qrCard.style.display = 'none'; }
-
-  qrBtn.addEventListener('click', function() {
-    if (qrCard.style.display === 'none' || qrCard.style.display === '') showQR();
-    else hideQR();
-  });
-  qrClose.addEventListener('click', hideQR);
-
-  // ── Real-time update via storage event (same browser, different tab) ──
+  // Same-browser real-time via storage event (hash mode)
   window.addEventListener('storage', function(e) {
     if (e.key !== 'bilpos_bracket' || !e.newValue) return;
     try {
       var data = JSON.parse(e.newValue);
       if (!data || !data.bracket) return;
-      var root = document.getElementById('bracket-root');
-      root.innerHTML = '';
-      var ids = Array.isArray(data.liveMatchIds) ? data.liveMatchIds : [];
-      renderBracket(data.bracket, ids);
-      if (typeof window.__bilposAutoFit === 'function') {
-        setTimeout(window.__bilposAutoFit, 100);
-      }
+      applyPayload({ bracket: data.bracket, liveMatchIds: data.liveMatchIds || [], tournament: data.tournament });
     } catch(err) {}
   });
 })();
