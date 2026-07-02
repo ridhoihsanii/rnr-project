@@ -48,9 +48,17 @@
   white-space: nowrap;
 }
 
+/* ──── Match area (absolute-position container for match cards) ── */
+.match-area {
+  position: relative;
+  overflow: visible;
+  width: 260px;
+  flex-shrink: 0;
+}
+
 /* ──── Match wrapper (position anchor for connector lines) ────── */
 .match-wrapper {
-  position: relative;
+  position: absolute;
   overflow: visible;
   width: 260px;
 }
@@ -337,6 +345,8 @@
   .match-wrapper.connector-bottom::after { right: -18px; width: 18px; }
 
   .round-column  { width: 220px; }
+  .match-area    { width: 220px; }
+  .match-wrapper { width: 220px; }
   .match-card    { width: 220px; }
   .score-input   { width: 36px; }
   .participant-select,

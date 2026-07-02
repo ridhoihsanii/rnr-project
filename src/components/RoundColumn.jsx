@@ -1,6 +1,6 @@
 import React from 'react';
 import MatchCard from './MatchCard';
-import { computeMatchMargins, computeConnectorHeight } from './bracketUtils';
+import { computeMatchTop, computeMatchAreaHeight, computeConnectorHeight } from './bracketUtils';
 
 function getRoundLabel(roundIdx, totalRounds) {
   var fromEnd = totalRounds - 1 - roundIdx;
@@ -30,48 +30,50 @@ export default function RoundColumn({
   var connectorH   = computeConnectorHeight(roundIdx);
   var matchOffset  = getMatchNumOffset(roundIdx, totalRounds);
   var displayLabel = roundLabel || getRoundLabel(roundIdx, totalRounds);
+  var matchAreaH   = computeMatchAreaHeight(roundIdx, round.length);
 
   return (
     <div className="round-column">
       <div className="round-label">{displayLabel}</div>
+      <div className="match-area" style={{ height: matchAreaH + 'px' }}>
+        {round.map(function(match, matchIdx) {
+          var topY         = computeMatchTop(roundIdx, matchIdx);
+          var isTop        = matchIdx % 2 === 0;
+          var hasLeftArm   = !isFirstRound;
+          var connectorTop = !isFinalRound && isTop;
+          var connectorBot = !isFinalRound && !isTop;
 
-      {round.map(function(match, matchIdx) {
-        var margins       = computeMatchMargins(roundIdx, matchIdx);
-        var isTop         = matchIdx % 2 === 0;
-        var hasLeftArm    = !isFirstRound;
-        var connectorTop  = !isFinalRound && isTop;
-        var connectorBot  = !isFinalRound && !isTop;
+          var wrapperClass = 'match-wrapper'
+            + (hasLeftArm   ? ' has-left-arm'      : '')
+            + (connectorTop ? ' connector-top'     : '')
+            + (connectorBot ? ' connector-bottom'  : '');
 
-        var wrapperClass  = 'match-wrapper'
-          + (hasLeftArm   ? ' has-left-arm'      : '')
-          + (connectorTop ? ' connector-top'     : '')
-          + (connectorBot ? ' connector-bottom'  : '');
-
-        return (
-          <div
-            key={match.id}
-            className={wrapperClass}
-            style={{
-              marginTop:     margins.marginTop + 'px',
-              '--connector-h': connectorH + 'px',
-            }}
-          >
-            <MatchCard
-              match={match}
-              matchNum={matchOffset + matchIdx + 1}
-              roundIdx={roundIdx}
-              matchIdx={matchIdx}
-              isFirstRound={isFirstRound}
-              participants={participants}
-              usedParticipantIds={usedParticipantIds}
-              liveMatchId={liveMatchId}
-              onScoreChange={onScoreChange}
-              onSelectParticipant={onSelectParticipant}
-              onToggleLive={onToggleLive}
-            />
-          </div>
-        );
-      })}
+          return (
+            <div
+              key={match.id}
+              className={wrapperClass}
+              style={{
+                top:             topY + 'px',
+                '--connector-h': connectorH + 'px',
+              }}
+            >
+              <MatchCard
+                match={match}
+                matchNum={matchOffset + matchIdx + 1}
+                roundIdx={roundIdx}
+                matchIdx={matchIdx}
+                isFirstRound={isFirstRound}
+                participants={participants}
+                usedParticipantIds={usedParticipantIds}
+                liveMatchId={liveMatchId}
+                onScoreChange={onScoreChange}
+                onSelectParticipant={onSelectParticipant}
+                onToggleLive={onToggleLive}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

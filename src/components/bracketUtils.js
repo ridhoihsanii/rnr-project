@@ -21,11 +21,27 @@ function getParticipantLabel(p) {
   return hc ? p.name + ' - ' + hc : p.name;
 }
 
-// Returns { marginTop: number } – apply as inline style on .match-wrapper
+// Returns { marginTop: number } – legacy, kept for tests
 function computeMatchMargins(roundIdx, matchIdx) {
   var step   = (CARD_HEIGHT + CARD_GAP) * Math.pow(2, roundIdx);
   var offset = step / 2 - CARD_HEIGHT / 2;
   return { marginTop: matchIdx === 0 ? offset : step - CARD_HEIGHT };
+}
+
+// Returns the absolute `top` px value for a match card within its match-area.
+// Formula: top = matchIdx * step + (step - CARD_HEIGHT) / 2
+// This places each winner match exactly at the midpoint between its two feeder matches.
+function computeMatchTop(roundIdx, matchIdx) {
+  var step = (CARD_HEIGHT + CARD_GAP) * Math.pow(2, roundIdx);
+  return matchIdx * step + (step - CARD_HEIGHT) / 2;
+}
+
+// Returns the required height in px of the match-area container for a round.
+function computeMatchAreaHeight(roundIdx, numMatches) {
+  if (numMatches === 0) return 0;
+  var step    = (CARD_HEIGHT + CARD_GAP) * Math.pow(2, roundIdx);
+  var lastTop = (numMatches - 1) * step + (step - CARD_HEIGHT) / 2;
+  return lastTop + CARD_HEIGHT;
 }
 
 // Returns the height in px of the vertical connector pseudo-element
@@ -55,6 +71,8 @@ module.exports = {
   getHcLabel,
   getParticipantLabel,
   computeMatchMargins,
+  computeMatchTop,
+  computeMatchAreaHeight,
   computeConnectorHeight,
   resolveWinner,
 };
