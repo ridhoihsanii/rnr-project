@@ -1,13 +1,17 @@
 import React from 'react';
 import { getParticipantLabel } from './bracketUtils';
 
+var BYE_VALUE = '__bye__';
+
 export default function ParticipantSlot({
   participant, isFirstRound, participants, usedParticipantIds, onSelect,
 }) {
   var isBye = participant && participant.name === 'BYE';
 
   if (isFirstRound) {
-    var currentId = (participant && participant.id != null) ? String(participant.id) : '';
+    var currentId = isBye
+      ? BYE_VALUE
+      : (participant && participant.id != null ? String(participant.id) : '');
 
     var available = (participants || []).filter(function(p) {
       if (!p || !p.name || !p.name.trim()) return false;
@@ -21,6 +25,7 @@ export default function ParticipantSlot({
         onChange={function(e) { onSelect(e.target.value || null); }}
       >
         <option value="">— Pilih Peserta —</option>
+        <option value={BYE_VALUE}>— BYE —</option>
         {available.map(function(p) {
           return (
             <option key={p.id} value={String(p.id)}>

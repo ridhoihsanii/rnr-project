@@ -10,8 +10,9 @@ export default function MatchCard({
   const isFirstRound = roundIdx === 0;
   const isLive = match.id === liveMatchId;
   var winner    = match.winner;
-  var p1IsWin   = winner && match.p1 && String(winner.id) === String(match.p1.id);
-  var p2IsWin   = winner && match.p2 && String(winner.id) === String(match.p2.id);
+  var winnerIsReal = winner && winner.id != null;
+  var p1IsWin   = winnerIsReal && match.p1 && match.p1.id != null && String(winner.id) === String(match.p1.id);
+  var p2IsWin   = winnerIsReal && match.p2 && match.p2.id != null && String(winner.id) === String(match.p2.id);
   var bothScored = match.score1 !== '' && match.score1 != null
                 && match.score2 !== '' && match.score2 != null;
   var p1IsBye   = match.p1 && match.p1.name === 'BYE';
@@ -43,7 +44,7 @@ export default function MatchCard({
           usedParticipantIds={usedParticipantIds}
           onSelect={function(id) { onSelectParticipant(roundIdx, matchIdx, 1, id); }}
         />
-        {!p1IsBye && (isFirstRound || (match.p1 && match.p1.id != null)) && (
+        {!p1IsBye && !isByeMatch && (isFirstRound || (match.p1 && match.p1.id != null)) && (
           <ScoreInput
             value={match.score1}
             onChange={function(v) { onScoreChange(roundIdx, matchIdx, 1, v); }}
@@ -66,7 +67,7 @@ export default function MatchCard({
           usedParticipantIds={usedParticipantIds}
           onSelect={function(id) { onSelectParticipant(roundIdx, matchIdx, 2, id); }}
         />
-        {!p2IsBye && (isFirstRound || (match.p2 && match.p2.id != null)) && (
+        {!p2IsBye && !isByeMatch && (isFirstRound || (match.p2 && match.p2.id != null)) && (
           <ScoreInput
             value={match.score2}
             onChange={function(v) { onScoreChange(roundIdx, matchIdx, 2, v); }}

@@ -128,12 +128,17 @@ export default function BracketPage() {
 
   var handleSelectParticipant = useCallback(function(roundIdx, matchIdx, slot, participantId) {
     if (roundIdx !== 0) return;
+    var BYE_VALUE = '__bye__';
+    var BYE_PARTICIPANT = { id: null, name: 'BYE', hc: '' };
+
     setState(function(prev) {
       var newBracket  = deepClone(prev.bracket);
       var key         = slot === 1 ? 'p1' : 'p2';
-      var participant = participantId
-        ? (prev.participants.find(function(p) { return String(p.id) === String(participantId); }) || null)
-        : null;
+      var participant = participantId === BYE_VALUE
+        ? BYE_PARTICIPANT
+        : (participantId
+          ? (prev.participants.find(function(p) { return String(p.id) === String(participantId); }) || null)
+          : null);
 
       var match      = newBracket.rounds[roundIdx][matchIdx];
       var prevWinner = match.winner;
@@ -146,12 +151,17 @@ export default function BracketPage() {
         cascadeClearWinnerMut(newBracket, roundIdx, matchIdx);
       }
 
-      // BYE auto-advance: if exactly one real player remains in this R0 match,
-      // that player receives a BYE and advances to R1 immediately.
+      // BYE auto-advance rules (no score needed):
+      //   real vs BYE  → real player advances
+      //   BYE vs real  → real player advances
+      //   BYE vs BYE   → BYE advances (propagates to next round as BYE)
+      //   null vs null → nothing advances
       var p1 = match.p1;
       var p2 = match.p2;
       var p1IsReal = p1 && p1.id != null;
       var p2IsReal = p2 && p2.id != null;
+      var p1IsBye  = p1 && p1.name === 'BYE';
+      var p2IsBye  = p2 && p2.name === 'BYE';
 
       if (p1IsReal && !p2IsReal) {
         var byeWinner = prev.participants.find(function(p) { return String(p.id) === String(p1.id); }) || p1;
@@ -163,8 +173,12 @@ export default function BracketPage() {
         match.winner = byeWinner;
         match.status = 'done';
         if (window.BilposTournament) window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, byeWinner);
+      } else if (!p1IsReal && !p2IsReal && (p1IsBye || p2IsBye)) {
+        // BYE vs BYE (or BYE vs null) — advance BYE to next round
+        match.winner = BYE_PARTICIPANT;
+        match.status = 'done';
+        if (window.BilposTournament) window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, BYE_PARTICIPANT);
       }
-      // Both null or both real → no auto-advance
 
       saveState(newBracket, prev.liveMatchId);
       return { bracket: newBracket, liveMatchId: prev.liveMatchId, participants: prev.participants };

@@ -23597,7 +23597,7 @@
   }) {
     var isBye = participant && participant.name === "BYE";
     if (isFirstRound) {
-      var currentId = participant && participant.id != null ? String(participant.id) : "";
+      var currentId = isBye ? BYE_VALUE : participant && participant.id != null ? String(participant.id) : "";
       var available = (participants || []).filter(function(p) {
         if (!p || !p.name || !p.name.trim())
           return false;
@@ -23613,6 +23613,7 @@
           }
         },
         /* @__PURE__ */ import_react.default.createElement("option", { value: "" }, "\u2014 Pilih Peserta \u2014"),
+        /* @__PURE__ */ import_react.default.createElement("option", { value: BYE_VALUE }, "\u2014 BYE \u2014"),
         available.map(function(p) {
           return /* @__PURE__ */ import_react.default.createElement("option", { key: p.id, value: String(p.id) }, (0, import_bracketUtils.getParticipantLabel)(p));
         })
@@ -23626,11 +23627,12 @@
     }
     return /* @__PURE__ */ import_react.default.createElement("span", { className: "participant-name" }, (0, import_bracketUtils.getParticipantLabel)(participant));
   }
-  var import_react, import_bracketUtils;
+  var import_react, import_bracketUtils, BYE_VALUE;
   var init_ParticipantSlot = __esm({
     "src/components/ParticipantSlot.jsx"() {
       import_react = __toESM(require_react());
       import_bracketUtils = __toESM(require_bracketUtils());
+      BYE_VALUE = "__bye__";
     }
   });
 
@@ -23675,8 +23677,9 @@
     const isFirstRound = roundIdx === 0;
     const isLive = match.id === liveMatchId;
     var winner = match.winner;
-    var p1IsWin = winner && match.p1 && String(winner.id) === String(match.p1.id);
-    var p2IsWin = winner && match.p2 && String(winner.id) === String(match.p2.id);
+    var winnerIsReal = winner && winner.id != null;
+    var p1IsWin = winnerIsReal && match.p1 && match.p1.id != null && String(winner.id) === String(match.p1.id);
+    var p2IsWin = winnerIsReal && match.p2 && match.p2.id != null && String(winner.id) === String(match.p2.id);
     var bothScored = match.score1 !== "" && match.score1 != null && match.score2 !== "" && match.score2 != null;
     var p1IsBye = match.p1 && match.p1.name === "BYE";
     var p2IsBye = match.p2 && match.p2.name === "BYE";
@@ -23703,7 +23706,7 @@
           onSelectParticipant(roundIdx, matchIdx, 1, id);
         }
       }
-    ), !p1IsBye && (isFirstRound || match.p1 && match.p1.id != null) && /* @__PURE__ */ import_react3.default.createElement(
+    ), !p1IsBye && !isByeMatch && (isFirstRound || match.p1 && match.p1.id != null) && /* @__PURE__ */ import_react3.default.createElement(
       ScoreInput,
       {
         value: match.score1,
@@ -23723,7 +23726,7 @@
           onSelectParticipant(roundIdx, matchIdx, 2, id);
         }
       }
-    ), !p2IsBye && (isFirstRound || match.p2 && match.p2.id != null) && /* @__PURE__ */ import_react3.default.createElement(
+    ), !p2IsBye && !isByeMatch && (isFirstRound || match.p2 && match.p2.id != null) && /* @__PURE__ */ import_react3.default.createElement(
       ScoreInput,
       {
         value: match.score2,
@@ -23974,10 +23977,12 @@
     var handleSelectParticipant = (0, import_react6.useCallback)(function(roundIdx, matchIdx, slot, participantId) {
       if (roundIdx !== 0)
         return;
+      var BYE_VALUE2 = "__bye__";
+      var BYE_PARTICIPANT = { id: null, name: "BYE", hc: "" };
       setState(function(prev) {
         var newBracket = deepClone(prev.bracket);
         var key = slot === 1 ? "p1" : "p2";
-        var participant = participantId ? prev.participants.find(function(p) {
+        var participant = participantId === BYE_VALUE2 ? BYE_PARTICIPANT : participantId ? prev.participants.find(function(p) {
           return String(p.id) === String(participantId);
         }) || null : null;
         var match = newBracket.rounds[roundIdx][matchIdx];
@@ -23994,6 +23999,8 @@
         var p2 = match.p2;
         var p1IsReal = p1 && p1.id != null;
         var p2IsReal = p2 && p2.id != null;
+        var p1IsBye = p1 && p1.name === "BYE";
+        var p2IsBye = p2 && p2.name === "BYE";
         if (p1IsReal && !p2IsReal) {
           var byeWinner = prev.participants.find(function(p) {
             return String(p.id) === String(p1.id);
@@ -24010,6 +24017,11 @@
           match.status = "done";
           if (window.BilposTournament)
             window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, byeWinner);
+        } else if (!p1IsReal && !p2IsReal && (p1IsBye || p2IsBye)) {
+          match.winner = BYE_PARTICIPANT;
+          match.status = "done";
+          if (window.BilposTournament)
+            window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, BYE_PARTICIPANT);
         }
         saveState(newBracket, prev.liveMatchId);
         return { bracket: newBracket, liveMatchId: prev.liveMatchId, participants: prev.participants };
