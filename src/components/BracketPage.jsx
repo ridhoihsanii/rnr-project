@@ -38,35 +38,38 @@ function loadInitialState() {
   var saved        = storage && storage.loadBracket();
 
   var bracket;
-  var liveMatchId = null;
+  var liveMatchIds = new Set();
   var size = parseInt(tournament_.size, 10) || 32;
 
   if (saved && saved.bracket && saved.bracket.size === size) {
-    // If all round-0 slots are empty/BYE, regenerate fresh bracket
     var round0 = saved.bracket.rounds && saved.bracket.rounds[0];
     var allEmpty = !round0 || round0.every(function(m) {
       return (!m.p1 || !m.p1.id) && (!m.p2 || !m.p2.id);
     });
     if (!allEmpty) {
-      bracket     = saved.bracket;
-      liveMatchId = saved.liveMatchId || null;
+      bracket = saved.bracket;
+      // Backward-compat: support old single liveMatchId and new liveMatchIds array
+      if (Array.isArray(saved.liveMatchIds)) {
+        liveMatchIds = new Set(saved.liveMatchIds);
+      } else if (saved.liveMatchId) {
+        liveMatchIds = new Set([saved.liveMatchId]);
+      }
     }
   }
 
   if (!bracket) {
-    // Generate empty bracket — participants assigned manually via Round 1 dropdowns
     bracket = window.BilposTournament
       ? window.BilposTournament.generateBracket(size, [])
       : { rounds: [], size: size, generatedAt: Date.now() };
   }
 
-  return { bracket: bracket, liveMatchId: liveMatchId, participants: participants };
+  return { bracket: bracket, liveMatchIds: liveMatchIds, participants: participants };
 }
 
 export default function BracketPage() {
   var [state, setState] = useState(loadInitialState);
 
-  // Re-read storage when participants/tournament storage keys change
+  // Re-read storage when participants/tournament storage keys change (cross-tab)
   useEffect(function() {
     function onStorage(e) {
       if (e.key === 'bilpos_participants' || e.key === 'bilpos_tournament') {
@@ -77,6 +80,19 @@ export default function BracketPage() {
     return function() { window.removeEventListener('storage', onStorage); };
   }, []);
 
+  // Re-read participants when app.js dispatches bilpos:participants-updated (same tab)
+  useEffect(function() {
+    function onParticipantsUpdated() {
+      var storage = window.BilposStorage;
+      var participants = (storage && storage.loadParticipants()) || [];
+      setState(function(prev) {
+        return { bracket: prev.bracket, liveMatchIds: prev.liveMatchIds, participants: participants };
+      });
+    }
+    window.addEventListener('bilpos:participants-updated', onParticipantsUpdated);
+    return function() { window.removeEventListener('bilpos:participants-updated', onParticipantsUpdated); };
+  }, []);
+
   // Re-read storage when bracket nav tab is clicked (bilpos:bracket-activated event)
   useEffect(function() {
     function onActivated() { setState(loadInitialState()); }
@@ -84,9 +100,12 @@ export default function BracketPage() {
     return function() { window.removeEventListener('bilpos:bracket-activated', onActivated); };
   }, []);
 
-  var saveState = useCallback(function(newBracket, newLiveMatchId) {
+  var saveState = useCallback(function(newBracket, newLiveMatchIds) {
     if (window.BilposStorage) {
-      window.BilposStorage.saveBracket({ bracket: newBracket, liveMatchId: newLiveMatchId });
+      window.BilposStorage.saveBracket({
+        bracket:      newBracket,
+        liveMatchIds: Array.from(newLiveMatchIds),
+      });
     }
   }, []);
 
@@ -121,8 +140,12 @@ export default function BracketPage() {
         }
       }
 
-      saveState(newBracket, prev.liveMatchId);
-      return { bracket: newBracket, liveMatchId: prev.liveMatchId, participants: prev.participants };
+      // Auto-remove match from liveMatchIds when winner is determined
+      var newLiveMatchIds = new Set(prev.liveMatchIds);
+      if (newWinner) newLiveMatchIds.delete(match.id);
+
+      saveState(newBracket, newLiveMatchIds);
+      return { bracket: newBracket, liveMatchIds: newLiveMatchIds, participants: prev.participants };
     });
   }, [saveState]);
 
@@ -180,16 +203,22 @@ export default function BracketPage() {
         if (window.BilposTournament) window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, BYE_PARTICIPANT);
       }
 
-      saveState(newBracket, prev.liveMatchId);
-      return { bracket: newBracket, liveMatchId: prev.liveMatchId, participants: prev.participants };
+      saveState(newBracket, prev.liveMatchIds);
+      return { bracket: newBracket, liveMatchIds: prev.liveMatchIds, participants: prev.participants };
     });
   }, [saveState]);
 
   var handleToggleLive = useCallback(function(matchId) {
     setState(function(prev) {
-      var newLiveMatchId = prev.liveMatchId === matchId ? null : matchId;
-      saveState(prev.bracket, newLiveMatchId);
-      return { bracket: prev.bracket, liveMatchId: newLiveMatchId, participants: prev.participants };
+      var newLiveMatchIds = new Set(prev.liveMatchIds);
+      // Toggle: add if not present, remove if already active
+      if (newLiveMatchIds.has(matchId)) {
+        newLiveMatchIds.delete(matchId);
+      } else {
+        newLiveMatchIds.add(matchId);
+      }
+      saveState(prev.bracket, newLiveMatchIds);
+      return { bracket: prev.bracket, liveMatchIds: newLiveMatchIds, participants: prev.participants };
     });
   }, [saveState]);
 
@@ -221,7 +250,7 @@ export default function BracketPage() {
     <BracketView
       bracket={state.bracket}
       participants={state.participants}
-      liveMatchId={state.liveMatchId}
+      liveMatchIds={state.liveMatchIds}
       onScoreChange={handleScoreChange}
       onSelectParticipant={handleSelectParticipant}
       onToggleLive={handleToggleLive}

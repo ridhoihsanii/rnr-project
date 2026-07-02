@@ -23669,13 +23669,13 @@
     matchIdx,
     participants,
     usedParticipantIds,
-    liveMatchId,
+    liveMatchIds,
     onScoreChange,
     onSelectParticipant,
     onToggleLive
   }) {
     const isFirstRound = roundIdx === 0;
-    const isLive = match.id === liveMatchId;
+    const isLive = liveMatchIds instanceof Set ? liveMatchIds.has(match.id) : false;
     var winner = match.winner;
     var winnerIsReal = winner && winner.id != null;
     var p1IsWin = winnerIsReal && match.p1 && match.p1.id != null && String(winner.id) === String(match.p1.id);
@@ -23771,7 +23771,7 @@
     participants,
     usedParticipantIds,
     roundLabel,
-    liveMatchId,
+    liveMatchIds,
     onScoreChange,
     onSelectParticipant,
     onToggleLive
@@ -23797,7 +23797,7 @@
           isFirstRound,
           participants,
           usedParticipantIds,
-          liveMatchId,
+          liveMatchIds,
           onScoreChange,
           onSelectParticipant,
           onToggleLive
@@ -23836,7 +23836,7 @@
   function BracketView({
     bracket,
     participants,
-    liveMatchId,
+    liveMatchIds,
     onScoreChange,
     onSelectParticipant,
     onToggleLive,
@@ -23856,7 +23856,7 @@
           participants,
           usedParticipantIds,
           roundLabel: roundLabels && roundLabels[roundIdx],
-          liveMatchId,
+          liveMatchIds,
           onScoreChange,
           onSelectParticipant,
           onToggleLive
@@ -23902,7 +23902,7 @@
     var participants = storage && storage.loadParticipants() || [];
     var saved = storage && storage.loadBracket();
     var bracket;
-    var liveMatchId = null;
+    var liveMatchIds = /* @__PURE__ */ new Set();
     var size = parseInt(tournament_.size, 10) || 32;
     if (saved && saved.bracket && saved.bracket.size === size) {
       var round0 = saved.bracket.rounds && saved.bracket.rounds[0];
@@ -23911,13 +23911,17 @@
       });
       if (!allEmpty) {
         bracket = saved.bracket;
-        liveMatchId = saved.liveMatchId || null;
+        if (Array.isArray(saved.liveMatchIds)) {
+          liveMatchIds = new Set(saved.liveMatchIds);
+        } else if (saved.liveMatchId) {
+          liveMatchIds = /* @__PURE__ */ new Set([saved.liveMatchId]);
+        }
       }
     }
     if (!bracket) {
       bracket = window.BilposTournament ? window.BilposTournament.generateBracket(size, []) : { rounds: [], size, generatedAt: Date.now() };
     }
-    return { bracket, liveMatchId, participants };
+    return { bracket, liveMatchIds, participants };
   }
   function BracketPage() {
     var [state, setState] = (0, import_react6.useState)(loadInitialState);
@@ -23933,6 +23937,19 @@
       };
     }, []);
     (0, import_react6.useEffect)(function() {
+      function onParticipantsUpdated() {
+        var storage = window.BilposStorage;
+        var participants = storage && storage.loadParticipants() || [];
+        setState(function(prev) {
+          return { bracket: prev.bracket, liveMatchIds: prev.liveMatchIds, participants };
+        });
+      }
+      window.addEventListener("bilpos:participants-updated", onParticipantsUpdated);
+      return function() {
+        window.removeEventListener("bilpos:participants-updated", onParticipantsUpdated);
+      };
+    }, []);
+    (0, import_react6.useEffect)(function() {
       function onActivated() {
         setState(loadInitialState());
       }
@@ -23941,9 +23958,12 @@
         window.removeEventListener("bilpos:bracket-activated", onActivated);
       };
     }, []);
-    var saveState = (0, import_react6.useCallback)(function(newBracket, newLiveMatchId) {
+    var saveState = (0, import_react6.useCallback)(function(newBracket, newLiveMatchIds) {
       if (window.BilposStorage) {
-        window.BilposStorage.saveBracket({ bracket: newBracket, liveMatchId: newLiveMatchId });
+        window.BilposStorage.saveBracket({
+          bracket: newBracket,
+          liveMatchIds: Array.from(newLiveMatchIds)
+        });
       }
     }, []);
     var handleScoreChange = (0, import_react6.useCallback)(function(roundIdx, matchIdx, slot, rawValue) {
@@ -23969,8 +23989,11 @@
             window.BilposTournament.advanceWinner(newBracket, roundIdx, matchIdx, fullWinner);
           }
         }
-        saveState(newBracket, prev.liveMatchId);
-        return { bracket: newBracket, liveMatchId: prev.liveMatchId, participants: prev.participants };
+        var newLiveMatchIds = new Set(prev.liveMatchIds);
+        if (newWinner)
+          newLiveMatchIds.delete(match.id);
+        saveState(newBracket, newLiveMatchIds);
+        return { bracket: newBracket, liveMatchIds: newLiveMatchIds, participants: prev.participants };
       });
     }, [saveState]);
     var handleSelectParticipant = (0, import_react6.useCallback)(function(roundIdx, matchIdx, slot, participantId) {
@@ -24022,15 +24045,20 @@
           if (window.BilposTournament)
             window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, BYE_PARTICIPANT);
         }
-        saveState(newBracket, prev.liveMatchId);
-        return { bracket: newBracket, liveMatchId: prev.liveMatchId, participants: prev.participants };
+        saveState(newBracket, prev.liveMatchIds);
+        return { bracket: newBracket, liveMatchIds: prev.liveMatchIds, participants: prev.participants };
       });
     }, [saveState]);
     var handleToggleLive = (0, import_react6.useCallback)(function(matchId) {
       setState(function(prev) {
-        var newLiveMatchId = prev.liveMatchId === matchId ? null : matchId;
-        saveState(prev.bracket, newLiveMatchId);
-        return { bracket: prev.bracket, liveMatchId: newLiveMatchId, participants: prev.participants };
+        var newLiveMatchIds = new Set(prev.liveMatchIds);
+        if (newLiveMatchIds.has(matchId)) {
+          newLiveMatchIds.delete(matchId);
+        } else {
+          newLiveMatchIds.add(matchId);
+        }
+        saveState(prev.bracket, newLiveMatchIds);
+        return { bracket: prev.bracket, liveMatchIds: newLiveMatchIds, participants: prev.participants };
       });
     }, [saveState]);
     if (!state.bracket || !state.bracket.rounds || state.bracket.rounds.length === 0) {
@@ -24049,7 +24077,7 @@
       {
         bracket: state.bracket,
         participants: state.participants,
-        liveMatchId: state.liveMatchId,
+        liveMatchIds: state.liveMatchIds,
         onScoreChange: handleScoreChange,
         onSelectParticipant: handleSelectParticipant,
         onToggleLive: handleToggleLive,

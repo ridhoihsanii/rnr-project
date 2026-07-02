@@ -24,7 +24,7 @@ function getMatchNumOffset(roundIdx, totalRounds) {
 
 export default function RoundColumn({
   round, roundIdx, totalRounds, participants, usedParticipantIds, roundLabel,
-  liveMatchId, onScoreChange, onSelectParticipant, onToggleLive,
+  liveMatchIds, onScoreChange, onSelectParticipant, onToggleLive,
 }) {
   var isFirstRound = roundIdx === 0;
   var isFinalRound = roundIdx === totalRounds - 1;
@@ -54,7 +54,7 @@ export default function RoundColumn({
           isFirstRound={isFirstRound}
           participants={participants}
           usedParticipantIds={usedParticipantIds}
-          liveMatchId={liveMatchId}
+          liveMatchIds={liveMatchIds}
           onScoreChange={onScoreChange}
           onSelectParticipant={onSelectParticipant}
           onToggleLive={onToggleLive}

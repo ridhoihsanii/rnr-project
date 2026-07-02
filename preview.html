@@ -476,9 +476,9 @@ function buildMatchWrap(match, roundIdx, matchIdx, offset, isFirst, isFinal, con
   return wrap;
 }
 
-function buildMatchCard(match, matchNum, liveMatchId) {
+function buildMatchCard(match, matchNum, liveMatchIds) {
   var winner    = match.winner;
-  var isLive    = match.id === liveMatchId;
+  var isLive    = Array.isArray(liveMatchIds) && liveMatchIds.indexOf(match.id) !== -1;
   var p1        = match.p1;
   var p2        = match.p2;
   var p1Bye     = pIsBye(p1);
@@ -747,7 +747,10 @@ function initQR() {
   document.title = title + ' — Bracket Preview';
 
   // Render bracket
-  renderBracket(payload.bracket, payload.liveMatchId);
+  var liveMatchIds = Array.isArray(payload.liveMatchIds)
+    ? payload.liveMatchIds
+    : (payload.liveMatchId ? [payload.liveMatchId] : []);
+  renderBracket(payload.bracket, liveMatchIds);
 
   // Generate QR code after rendering
   initQR();

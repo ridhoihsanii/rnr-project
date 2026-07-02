@@ -5,10 +5,10 @@ import ScoreInput from './ScoreInput';
 export default function MatchCard({
   match, matchNum, roundIdx, matchIdx,
   participants, usedParticipantIds,
-  liveMatchId, onScoreChange, onSelectParticipant, onToggleLive,
+  liveMatchIds, onScoreChange, onSelectParticipant, onToggleLive,
 }) {
   const isFirstRound = roundIdx === 0;
-  const isLive = match.id === liveMatchId;
+  const isLive = liveMatchIds instanceof Set ? liveMatchIds.has(match.id) : false;
   var winner    = match.winner;
   var winnerIsReal = winner && winner.id != null;
   var p1IsWin   = winnerIsReal && match.p1 && match.p1.id != null && String(winner.id) === String(match.p1.id);

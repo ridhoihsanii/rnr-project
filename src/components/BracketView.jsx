@@ -3,7 +3,7 @@ import './Bracket.css';
 import RoundColumn from './RoundColumn';
 
 export default function BracketView({
-  bracket, participants, liveMatchId,
+  bracket, participants, liveMatchIds,
   onScoreChange, onSelectParticipant, onToggleLive,
   usedParticipantIds, roundLabels,
 }) {
@@ -23,7 +23,7 @@ export default function BracketView({
               participants={participants}
               usedParticipantIds={usedParticipantIds}
               roundLabel={roundLabels && roundLabels[roundIdx]}
-              liveMatchId={liveMatchId}
+              liveMatchIds={liveMatchIds}
               onScoreChange={onScoreChange}
               onSelectParticipant={onSelectParticipant}
               onToggleLive={onToggleLive}

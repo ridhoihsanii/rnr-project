@@ -24,6 +24,15 @@
     }
   }
 
+  function dispatchParticipantsUpdated() {
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      var event = typeof CustomEvent === 'function'
+        ? new CustomEvent('bilpos:participants-updated')
+        : { type: 'bilpos:participants-updated' };
+      window.dispatchEvent(event);
+    }
+  }
+
   function getKnownHcValue(participant) {
     var hcValues = ['HC 3B', 'HC 3N', 'HC 3A', 'HC 3+', 'custom'];
     var hc = participant && participant.hc != null ? String(participant.hc) : '';
@@ -473,6 +482,7 @@
               self.participants = BilposStorage.loadParticipants();
               self.renderParticipantTable();
               self.renderStats();
+              dispatchParticipantsUpdated();
               if (typeof BilposUI !== 'undefined') BilposUI.showToast('Peserta dihapus', 'success');
             }
           }
@@ -522,6 +532,7 @@
             self.participants = [];
             self.renderParticipantTable();
             self.renderStats();
+            dispatchParticipantsUpdated();
             clearAllParticipantsFromBracket();
             if (typeof BilposUI !== 'undefined') BilposUI.showToast('Semua peserta dihapus', 'success');
           }
@@ -555,9 +566,9 @@
           var saved      = window.BilposStorage ? BilposStorage.loadBracket()     : null;
           var tournament = window.BilposStorage ? BilposStorage.loadTournament()  : {};
           var payload    = JSON.stringify({
-            bracket:     saved && saved.bracket   ? saved.bracket   : null,
-            liveMatchId: saved && saved.liveMatchId != null ? saved.liveMatchId : null,
-            tournament:  tournament
+            bracket:      saved && saved.bracket   ? saved.bracket   : null,
+            liveMatchIds: saved && saved.liveMatchIds ? saved.liveMatchIds : [],
+            tournament:   tournament
           });
           var compressed = window.LZString
             ? LZString.compressToEncodedURIComponent(payload)
@@ -743,6 +754,7 @@
       BilposStorage.saveParticipant(participant);
       this.participants = BilposStorage.loadParticipants();
       this.renderStats();
+      dispatchParticipantsUpdated();
 
       // If name or HC changed, update in-place inside bracket (no clearing)
       if (existingParticipant && (name !== oldName || hc !== (existingParticipant.hc || ''))) {
