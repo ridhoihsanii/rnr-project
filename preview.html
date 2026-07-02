@@ -348,6 +348,83 @@
     }
     .btn-qr:hover { background: rgba(217,119,6,0.2); }
 
+    /* ── Zoom controls ────────────────────────────────── */
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: rgba(217,119,6,0.07);
+      border: 1px solid rgba(217,119,6,0.25);
+      border-radius: 6px;
+      padding: 1px;
+    }
+    .zoom-btn {
+      background: none;
+      border: none;
+      color: #d97706;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .zoom-btn:hover { background: rgba(217,119,6,0.18); }
+    .zoom-display {
+      position: relative;
+    }
+    .zoom-display-btn {
+      background: none;
+      border: none;
+      color: #d97706;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 46px;
+      height: 24px;
+      cursor: pointer;
+      letter-spacing: .3px;
+      border-radius: 4px;
+      padding: 0 4px;
+    }
+    .zoom-display-btn:hover { background: rgba(217,119,6,0.18); }
+    .zoom-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      z-index: 300;
+      overflow: hidden;
+      min-width: 90px;
+    }
+    .zoom-dropdown.open { display: block; }
+    .zoom-option {
+      display: block;
+      width: 100%;
+      padding: 7px 14px;
+      text-align: center;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      color: #334155;
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: .3px;
+    }
+    .zoom-option:hover { background: #f1f5f9; color: #d97706; }
+    .zoom-option.active { color: #d97706; background: rgba(217,119,6,0.08); }
+
     /* ── Responsive ───────────────────────────────────── */
     @media (max-width: 600px) {
       :root { --card-w: 220px; }
@@ -370,9 +447,24 @@
   <div class="preview-hint">
     <span>👁 Read-only</span>
     <span>·</span>
-    <span>📱 Pinch to zoom · Drag to pan</span>
+    <span>📱 Pinch · Drag to pan</span>
     <span>·</span>
-    <button id="btn-fit" style="background:rgba(217,119,6,0.1);border:1px solid rgba(217,119,6,0.3);color:#d97706;font-family:inherit;font-size:10px;font-weight:600;padding:3px 9px;border-radius:5px;cursor:pointer;letter-spacing:.5px;">⊡ FIT</button>
+    <div class="zoom-controls">
+      <button class="zoom-btn" id="btn-zoom-out" title="Zoom out">−</button>
+      <div class="zoom-display">
+        <button class="zoom-display-btn" id="btn-zoom-display" title="Pilih zoom">FIT</button>
+        <div class="zoom-dropdown" id="zoom-dropdown">
+          <button class="zoom-option" data-zoom="fit">⊡ FIT</button>
+          <button class="zoom-option" data-zoom="0.25">25%</button>
+          <button class="zoom-option" data-zoom="0.5">50%</button>
+          <button class="zoom-option" data-zoom="0.75">75%</button>
+          <button class="zoom-option" data-zoom="1">100%</button>
+          <button class="zoom-option" data-zoom="1.5">150%</button>
+          <button class="zoom-option" data-zoom="2">200%</button>
+        </div>
+      </div>
+      <button class="zoom-btn" id="btn-zoom-in" title="Zoom in">+</button>
+    </div>
     <button id="btn-qr" class="btn-qr">📲 QR CODE</button>
   </div>
 </header>
@@ -679,6 +771,27 @@ function initQR() {
 
   function applyTransform() {
     inner.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+    updateZoomDisplay();
+  }
+
+  /* ── Zoom display label ── */
+  var zoomDisplayBtn = document.getElementById('btn-zoom-display');
+  var zoomDropdown   = document.getElementById('zoom-dropdown');
+  var isFitMode      = true; // track whether current scale = auto-fit scale
+  var fitScale       = 1;
+
+  function updateZoomDisplay() {
+    if (!zoomDisplayBtn) return;
+    var pct = Math.round(scale * 100);
+    zoomDisplayBtn.textContent = (isFitMode ? '⊡ FIT' : pct + '%');
+    // highlight active option
+    if (zoomDropdown) {
+      Array.prototype.forEach.call(zoomDropdown.querySelectorAll('.zoom-option'), function(opt) {
+        var v = opt.getAttribute('data-zoom');
+        if (v === 'fit') opt.classList.toggle('active', isFitMode);
+        else opt.classList.toggle('active', !isFitMode && Math.abs(parseFloat(v) - scale) < 0.01);
+      });
+    }
   }
 
   function autoFit() {
@@ -687,9 +800,56 @@ function initQR() {
     var oW = outer.clientWidth;
     var oH = outer.clientHeight;
     if (!iW || !iH) return;
-    var s = Math.min(oW / iW, oH / iH, 1);
-    scale = s; panX = 0; panY = 0;
+    fitScale = Math.min(oW / iW, oH / iH, 1);
+    scale = fitScale; panX = 0; panY = 0;
+    isFitMode = true;
     applyTransform();
+  }
+
+  function setZoom(newScale) {
+    var oW = outer.clientWidth;
+    var oH = outer.clientHeight;
+    var cx  = oW / 2;
+    var cy  = oH / 2;
+    panX = cx + (panX - cx) * (newScale / scale);
+    panY = cy + (panY - cy) * (newScale / scale);
+    scale = newScale;
+    isFitMode = false;
+    applyTransform();
+  }
+
+  /* ── Zoom +/− buttons ── */
+  var STEPS = [0.1, 0.15, 0.2, 0.25, 0.33, 0.4, 0.5, 0.6, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4];
+  function snapDown(s) {
+    for (var i = STEPS.length - 1; i >= 0; i--) if (STEPS[i] < s - 0.01) return STEPS[i];
+    return MIN_SCALE;
+  }
+  function snapUp(s) {
+    for (var i = 0; i < STEPS.length; i++) if (STEPS[i] > s + 0.01) return STEPS[i];
+    return MAX_SCALE;
+  }
+
+  var zoomOutBtn = document.getElementById('btn-zoom-out');
+  var zoomInBtn  = document.getElementById('btn-zoom-in');
+  if (zoomOutBtn) zoomOutBtn.addEventListener('click', function() { setZoom(snapDown(scale)); });
+  if (zoomInBtn)  zoomInBtn.addEventListener('click',  function() { setZoom(snapUp(scale)); });
+
+  /* ── Zoom dropdown ── */
+  if (zoomDisplayBtn && zoomDropdown) {
+    zoomDisplayBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      zoomDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', function() { zoomDropdown.classList.remove('open'); });
+    Array.prototype.forEach.call(zoomDropdown.querySelectorAll('.zoom-option'), function(opt) {
+      opt.addEventListener('click', function(e) {
+        e.stopPropagation();
+        zoomDropdown.classList.remove('open');
+        var v = opt.getAttribute('data-zoom');
+        if (v === 'fit') { autoFit(); }
+        else { setZoom(parseFloat(v)); }
+      });
+    });
   }
 
   // ── Touch (1 finger = pan, 2 fingers = pinch zoom + pan) ──
@@ -725,6 +885,7 @@ function initQR() {
       panX  = mx + ratio * (startPanX - startMid.x);
       panY  = my + ratio * (startPanY - startMid.y);
       scale = newS;
+      isFitMode = false;
     }
     applyTransform();
   }, { passive: false });
@@ -757,12 +918,9 @@ function initQR() {
     panX  = ox + (panX - ox) * (newS / scale);
     panY  = oy + (panY - oy) * (newS / scale);
     scale = newS;
+    isFitMode = false;
     applyTransform();
   }, { passive: false });
-
-  // ── Fit button ──
-  var fitBtn = document.getElementById('btn-fit');
-  if (fitBtn) fitBtn.addEventListener('click', autoFit);
 
   // Expose for real-time re-render
   window.__bilposAutoFit = autoFit;
