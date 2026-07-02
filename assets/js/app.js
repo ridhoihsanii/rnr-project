@@ -432,6 +432,24 @@
       if (importJsonInput) {
         importJsonInput.addEventListener('change', function (e) { self.importJSON(e.target.files[0]); });
       }
+
+      // Preview bracket button
+      var previewBtn = getElement('btn-preview-bracket');
+      if (previewBtn) {
+        previewBtn.addEventListener('click', function () {
+          var saved      = window.BilposStorage ? BilposStorage.loadBracket()     : null;
+          var tournament = window.BilposStorage ? BilposStorage.loadTournament()  : {};
+          var payload    = JSON.stringify({
+            bracket:     saved && saved.bracket   ? saved.bracket   : null,
+            liveMatchId: saved && saved.liveMatchId != null ? saved.liveMatchId : null,
+            tournament:  tournament
+          });
+          var compressed = window.LZString
+            ? LZString.compressToEncodedURIComponent(payload)
+            : encodeURIComponent(payload);
+          window.open('preview.html#' + compressed, '_blank');
+        });
+      }
     },
 
     getParticipantForRow: function (rowIndex) {

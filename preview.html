@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Allow pinch-to-zoom on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Bracket Preview — BILPOS Tournament</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #07101c;
+      --surface:   #0d1b2a;
+      --border:    rgba(255,255,255,0.07);
+      --text:      #e2e8f0;
+      --muted:     #4a6080;
+      --accent:    #FACC15;
+      --green:     #22c55e;
+      --red:       #ef4444;
+      --card-h:    100px;
+      --card-w:    260px;
+      --card-gap:  8px;
+      --round-gap: 48px;
+      --arm:       24px;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: auto;
+    }
+
+    /* ── Header ───────────────────────────────────────── */
+    .preview-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,16,28,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .preview-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--accent);
+    }
+    .preview-brand .sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .preview-hint {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Bracket scroll area ──────────────────────────── */
+    .bracket-scroll {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      overflow-x: auto;
+      overflow-y: visible;
+      gap: var(--round-gap);
+      padding: 24px 32px 100px;
+      min-height: calc(100vh - 52px);
+    }
+
+    /* ── Round column ─────────────────────────────────── */
+    .round-col {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      width: var(--card-w);
+      overflow: visible;
+    }
+    .round-label {
+      text-align: center;
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      padding: 4px 8px;
+      background: rgba(250,204,21,0.07);
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    /* ── Match area (R1+ absolute container) ──────────── */
+    .match-area {
+      position: relative;
+      overflow: visible;
+      width: var(--card-w);
+      flex-shrink: 0;
+    }
+
+    /* ── Match wrapper ────────────────────────────────── */
+    .match-wrap {
+      position: relative;
+      overflow: visible;
+      width: var(--card-w);
+    }
+
+    /* Left arm (R1+) */
+    .match-wrap.has-arm::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: calc(-1 * var(--arm));
+      width: var(--arm);
+      height: 2px;
+      background: rgba(100,140,180,0.9);
+      transform: translateY(-50%);
+    }
+    /* Right connector going down (even match) */
+    .match-wrap.conn-top::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: calc(-1 * var(--arm));
+      width: var(--arm);
+      height: var(--conn-h, 54px);
+      border-top: 2px solid rgba(100,140,180,0.9);
+      border-right: 2px solid rgba(100,140,180,0.9);
+    }
+    /* Right connector going up (odd match) */
+    .match-wrap.conn-bot::after {
+      content: '';
+      position: absolute;
+      bottom: 50%;
+      right: calc(-1 * var(--arm));
+      width: var(--arm);
+      height: calc(var(--conn-h, 54px) + 2px);
+      border-bottom: 2px solid rgba(100,140,180,0.9);
+      border-right: 2px solid rgba(100,140,180,0.9);
+    }
+
+    /* ── Match card ───────────────────────────────────── */
+    .mc {
+      width: var(--card-w);
+      height: var(--card-h);
+      background: linear-gradient(135deg, #0d1b2a 0%, #0a1520 100%);
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    .mc.is-live {
+      border-color: #ff1744;
+      box-shadow: 0 0 14px 3px rgba(255,23,68,0.3);
+    }
+    .mc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+    .mc-num {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .live-badge {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: #ff1744;
+      color: #fff;
+      letter-spacing: .5px;
+    }
+    .mc-slot {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      min-height: 28px;
+      padding-left: 5px;
+      border-left: 3px solid transparent;
+      border-radius: 3px;
+    }
+    .mc-slot.win-slot { border-left-color: var(--green); background: rgba(34,197,94,0.06); }
+    .mc-slot.lose-slot { opacity: .6; border-left-color: rgba(239,68,68,0.25); }
+    .mc-name {
+      flex: 1;
+      font-size: 10px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text);
+    }
+    .mc-name.tbd { color: var(--muted); font-style: italic; }
+    .mc-name.bye { color: var(--muted); font-style: italic; }
+    .mc-score {
+      flex-shrink: 0;
+      width: 28px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .mc-badge {
+      flex-shrink: 0;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 4px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .mc-badge.win  { background: rgba(34,197,94,0.2);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .mc-badge.lose { background: rgba(239,68,68,0.12); color: var(--red);   border: 1px solid rgba(239,68,68,0.2); }
+
+    /* ── Error / empty state ──────────────────────────── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      gap: 16px;
+      color: var(--muted);
+      text-align: center;
+      padding: 32px;
+    }
+    .empty-state .icon { font-size: 48px; }
+    .empty-state p { font-size: 14px; max-width: 400px; }
+
+    /* ── QR card (fixed bottom-right) ────────────────── */
+    .qr-card {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 200;
+    }
+    .qr-title {
+      font-size: 9px;
+      font-weight: 700;
+      color: #1e293b;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .qr-card canvas { border-radius: 6px; }
+    .qr-copy {
+      font-size: 9px;
+      color: #64748b;
+      background: #f1f5f9;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-family: inherit;
+      width: 100%;
+      text-align: center;
+    }
+    .qr-copy:hover { background: #e2e8f0; }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 600px) {
+      :root { --card-w: 220px; }
+      .bracket-scroll { padding: 16px 16px 100px; gap: 36px; }
+      .qr-card { bottom: 12px; right: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="preview-header">
+  <div class="preview-brand">
+    <span>🏆</span>
+    <div>
+      <div id="preview-title">BILPOS Tournament</div>
+      <div class="sub">Bracket Preview</div>
+    </div>
+  </div>
+  <div class="preview-hint">
+    <span>👁 Read-only</span>
+    <span>·</span>
+    <span>📱 Pinch / Ctrl+scroll to zoom</span>
+  </div>
+</header>
+
+<div id="bracket-root"></div>
+
+<div class="qr-card" id="qr-card" style="display:none">
+  <div class="qr-title">Scan to share</div>
+  <canvas id="qr-canvas"></canvas>
+  <button class="qr-copy" id="qr-copy-btn">Copy link</button>
+</div>
+
+<script>
+// ── Constants (must match bracketUtils.js) ─────────────────────────────
+var CARD_HEIGHT = 100;
+var CARD_GAP    = 8;
+var ARM_LENGTH  = 24;
+
+// ── Positioning helpers ────────────────────────────────────────────────
+function computeMatchMargins(matchIdx) {
+  var step   = (CARD_HEIGHT + CARD_GAP); // R0: step=108
+  var offset = step / 2 - CARD_HEIGHT / 2; // =4
+  return matchIdx === 0 ? offset : (step - CARD_HEIGHT); // =4 or 8
+}
+
+function computeMatchTop(roundIdx, matchIdx) {
+  var step = (CARD_HEIGHT + CARD_GAP) * Math.pow(2, roundIdx);
+  return matchIdx * step + (step - CARD_HEIGHT) / 2;
+}
+
+function computeMatchAreaHeight(roundIdx, numMatches) {
+  if (numMatches === 0) return 0;
+  var step    = (CARD_HEIGHT + CARD_GAP) * Math.pow(2, roundIdx);
+  var lastTop = (numMatches - 1) * step + (step - CARD_HEIGHT) / 2;
+  return lastTop + CARD_HEIGHT;
+}
+
+function computeConnectorHeight(roundIdx) {
+  var step = (CARD_HEIGHT + CARD_GAP) * Math.pow(2, roundIdx);
+  return step / 2;
+}
+
+function getRoundLabel(roundIdx, totalRounds) {
+  var fromEnd = totalRounds - 1 - roundIdx;
+  if (fromEnd === 0) return 'FINAL';
+  if (fromEnd === 1) return 'SEMI FINAL';
+  if (fromEnd === 2) return 'QUARTER FINAL';
+  return 'ROUND ' + (roundIdx + 1);
+}
+
+function getMatchNumOffset(roundIdx, totalRounds) {
+  var totalSlots = Math.pow(2, totalRounds);
+  var offset = 0;
+  for (var r = 0; r < roundIdx; r++) {
+    offset += totalSlots / Math.pow(2, r + 1);
+  }
+  return offset;
+}
+
+// ── Participant display helpers ────────────────────────────────────────
+function pLabel(p) {
+  if (!p) return null;
+  if (p.name === 'BYE') return 'BYE';
+  var hc = (p.hcCustom || p.hc || '').toString().trim();
+  return hc ? p.name + ' - ' + hc : p.name;
+}
+
+function pIsBye(p) { return p && p.name === 'BYE'; }
+function pIsReal(p) { return p && p.id != null && p.name !== 'BYE'; }
+
+// ── Render bracket ─────────────────────────────────────────────────────
+function renderBracket(bracket, liveMatchId) {
+  var root = document.getElementById('bracket-root');
+  if (!bracket || !bracket.rounds || !bracket.rounds.length) {
+    root.innerHTML = '<div class="empty-state"><div class="icon">🏆</div><p>Bracket belum tersedia. Buka halaman utama dan buat bracket terlebih dahulu.</p></div>';
+    return;
+  }
+
+  var rounds     = bracket.rounds;
+  var totalRounds = rounds.length;
+
+  var scroll = document.createElement('div');
+  scroll.className = 'bracket-scroll';
+
+  rounds.forEach(function(round, roundIdx) {
+    var isFirst  = roundIdx === 0;
+    var isFinal  = roundIdx === totalRounds - 1;
+    var connH    = computeConnectorHeight(roundIdx);
+    var offset   = getMatchNumOffset(roundIdx, totalRounds);
+    var label    = getRoundLabel(roundIdx, totalRounds);
+
+    var col = document.createElement('div');
+    col.className = 'round-col';
+
+    var labelEl = document.createElement('div');
+    labelEl.className = 'round-label';
+    labelEl.textContent = label;
+    col.appendChild(labelEl);
+
+    if (isFirst) {
+      // R0: flex layout with marginTop
+      round.forEach(function(match, matchIdx) {
+        var mt = computeMatchMargins(matchIdx);
+        var wrap = buildMatchWrap(match, roundIdx, matchIdx, offset, isFirst, isFinal, connH, liveMatchId);
+        wrap.style.marginTop = mt + 'px';
+        col.appendChild(wrap);
+      });
+    } else {
+      // R1+: absolute within match-area
+      var areaH = computeMatchAreaHeight(roundIdx, round.length);
+      var area = document.createElement('div');
+      area.className = 'match-area';
+      area.style.height = areaH + 'px';
+
+      round.forEach(function(match, matchIdx) {
+        var topY = computeMatchTop(roundIdx, matchIdx);
+        var wrap = buildMatchWrap(match, roundIdx, matchIdx, offset, isFirst, isFinal, connH, liveMatchId);
+        wrap.style.position = 'absolute';
+        wrap.style.top = topY + 'px';
+        area.appendChild(wrap);
+      });
+      col.appendChild(area);
+    }
+
+    scroll.appendChild(col);
+  });
+
+  root.appendChild(scroll);
+}
+
+function buildMatchWrap(match, roundIdx, matchIdx, offset, isFirst, isFinal, connH, liveMatchId) {
+  var isTop = matchIdx % 2 === 0;
+
+  var wrap = document.createElement('div');
+  wrap.className = 'match-wrap';
+  if (!isFirst) wrap.classList.add('has-arm');
+  if (!isFinal && isTop)  wrap.classList.add('conn-top');
+  if (!isFinal && !isTop) wrap.classList.add('conn-bot');
+  wrap.style.setProperty('--conn-h', connH + 'px');
+
+  wrap.appendChild(buildMatchCard(match, offset + matchIdx + 1, liveMatchId));
+  return wrap;
+}
+
+function buildMatchCard(match, matchNum, liveMatchId) {
+  var winner    = match.winner;
+  var isLive    = match.id === liveMatchId;
+  var p1        = match.p1;
+  var p2        = match.p2;
+  var p1Bye     = pIsBye(p1);
+  var p2Bye     = pIsBye(p2);
+  var isByeMatch = p1Bye || p2Bye;
+  var bothScored = match.score1 !== '' && match.score1 != null
+                && match.score2 !== '' && match.score2 != null;
+  var winnerIsReal = winner && winner.id != null;
+  var p1Win = winnerIsReal && p1 && p1.id != null && String(winner.id) === String(p1.id);
+  var p2Win = winnerIsReal && p2 && p2.id != null && String(winner.id) === String(p2.id);
+
+  var card = document.createElement('div');
+  card.className = 'mc' + (isLive ? ' is-live' : '');
+
+  // Header
+  var hdr = document.createElement('div');
+  hdr.className = 'mc-header';
+  var num = document.createElement('span');
+  num.className = 'mc-num';
+  num.textContent = 'Match #' + matchNum;
+  hdr.appendChild(num);
+  if (isLive) {
+    var lb = document.createElement('span');
+    lb.className = 'live-badge';
+    lb.textContent = '🔴 LIVE';
+    hdr.appendChild(lb);
+  }
+  card.appendChild(hdr);
+
+  // Slot builder
+  function buildSlot(p, score, isWin, isLose, isBye) {
+    var slot = document.createElement('div');
+    var slotClass = 'mc-slot';
+    if (isWin) slotClass += ' win-slot';
+    else if (isLose) slotClass += ' lose-slot';
+    slot.className = slotClass;
+
+    var name = document.createElement('span');
+    if (!p) {
+      name.className = 'mc-name tbd';
+      name.textContent = 'TBD';
+    } else if (isBye) {
+      name.className = 'mc-name bye';
+      name.textContent = 'BYE';
+    } else {
+      name.className = 'mc-name';
+      name.textContent = pLabel(p) || 'TBD';
+    }
+    slot.appendChild(name);
+
+    if (!isBye && !isByeMatch && score !== '' && score != null) {
+      var sc = document.createElement('span');
+      sc.className = 'mc-score';
+      sc.textContent = score;
+      slot.appendChild(sc);
+    }
+
+    if (bothScored && winner && !isByeMatch) {
+      var badge = document.createElement('span');
+      badge.className = 'mc-badge ' + (isWin ? 'win' : 'lose');
+      badge.textContent = isWin ? 'WIN' : 'LOSE';
+      slot.appendChild(badge);
+    }
+
+    return slot;
+  }
+
+  card.appendChild(buildSlot(p1, match.score1, p1Win, p2Win && !p1Win, p1Bye));
+  card.appendChild(buildSlot(p2, match.score2, p2Win, p1Win && !p2Win, p2Bye));
+
+  return card;
+}
+
+// ── QR code ────────────────────────────────────────────────────────────
+function initQR() {
+  var url = window.location.href;
+  var card = document.getElementById('qr-card');
+  var canvas = document.getElementById('qr-canvas');
+  var copyBtn = document.getElementById('qr-copy-btn');
+
+  if (typeof QRCode !== 'undefined') {
+    QRCode.toCanvas(canvas, url, {
+      width: 160,
+      margin: 1,
+      color: { dark: '#0f172a', light: '#ffffff' }
+    }, function(err) {
+      if (!err) card.style.display = 'flex';
+    });
+  } else {
+    card.style.display = 'none';
+  }
+
+  copyBtn.addEventListener('click', function() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function() { copyBtn.textContent = 'Copy link'; }, 2000);
+      });
+    } else {
+      // fallback
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(function() { copyBtn.textContent = 'Copy link'; }, 2000);
+    }
+  });
+}
+
+// ── Main: decode URL hash and render ──────────────────────────────────
+(function() {
+  var hash = window.location.hash.slice(1);
+  if (!hash) {
+    document.getElementById('bracket-root').innerHTML =
+      '<div class="empty-state"><div class="icon">🔗</div><p>Tidak ada data bracket di URL ini. Buka halaman utama Bilpos Tournament dan klik tombol Preview.</p></div>';
+    return;
+  }
+
+  var payload;
+  try {
+    var json = typeof LZString !== 'undefined'
+      ? LZString.decompressFromEncodedURIComponent(hash)
+      : decodeURIComponent(hash);
+    payload = JSON.parse(json);
+  } catch(e) {
+    document.getElementById('bracket-root').innerHTML =
+      '<div class="empty-state"><div class="icon">⚠️</div><p>Data bracket tidak dapat dibaca. Coba klik Preview lagi dari halaman utama.</p></div>';
+    return;
+  }
+
+  // Set title
+  var title = (payload.tournament && (payload.tournament.venue || payload.tournament.name)) || 'BILPOS Tournament';
+  document.getElementById('preview-title').textContent = title;
+  document.title = title + ' — Bracket Preview';
+
+  // Render bracket
+  renderBracket(payload.bracket, payload.liveMatchId);
+
+  // Generate QR code after rendering
+  initQR();
+})();
+</script>
+</body>
+</html>
