@@ -1,4 +1,4 @@
-const test = require('node:test');
+﻿const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -445,7 +445,7 @@ function createBracketFixture() {
   };
 }
 
-test('BilposBracket exposes the required public API', () => {
+test('RNR INTANBracket exposes the required public API', () => {
   const bracketPath = path.join(process.cwd(), 'assets', 'js', 'bracket.js');
   assert.ok(fs.existsSync(bracketPath), 'assets/js/bracket.js should exist');
 
@@ -488,7 +488,7 @@ test('render falls back safely when BilposUI or BilposTournament globals are una
 
   assert.equal(
     emptyContainer.innerHTML,
-    '<div class="empty-state"><div class="empty-icon">🏆</div><h5>Bracket Belum Dibuat</h5></div>'
+    '<div class="empty-state"><div class="empty-icon">ðŸ†</div><h5>Bracket Belum Dibuat</h5></div>'
   );
   assert.equal(
     bracketContainer.querySelector('.bracket-round-label').textContent,
@@ -522,7 +522,7 @@ test('render builds horizontal rounds, match cards, and match states', () => {
   assert.equal(rounds[0].querySelector('.bracket-round-label').textContent, 'ROUND 1');
   assert.equal(rounds[1].querySelector('.bracket-round-label').textContent, 'SEMI FINAL');
   assert.equal(rounds[2].querySelector('.bracket-round-label').textContent, 'FINAL');
-  assert.equal(doneBadge.textContent, '✓ SELESAI');
+  assert.equal(doneBadge.textContent, 'âœ“ SELESAI');
   assert.equal(liveButton.classList.contains('active'), true);
   assert.equal(liveButton.querySelector('.live-dot') != null, true);
   assert.equal(byeCard.classList.contains('match-bye'), true);
@@ -599,3 +599,4 @@ test('setZoom, toggleFullscreen, and centerBracket update UI helpers safely', ()
   assert.equal(container.scrollLeft, 0);
   assert.equal(container.scrollTop, 0);
 });
+

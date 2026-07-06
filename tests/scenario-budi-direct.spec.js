@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+﻿const { test, expect } = require('@playwright/test');
 const path = require('path');
 
 test('E2E direct: prefill Budi then generate bracket', async ({ page }) => {
@@ -7,10 +7,10 @@ test('E2E direct: prefill Budi then generate bracket', async ({ page }) => {
   await page.goto('/index.html');
   // set localStorage within the app origin, then reload to ensure app picks up values
   await page.evaluate(() => {
-    localStorage.setItem('bilpos_tournament', JSON.stringify({ size: 32, status: 'setup', currentRound: 0 }));
+    localStorage.setItem('RNR INTAN_tournament', JSON.stringify({ size: 32, status: 'setup', currentRound: 0 }));
     const participants = [{ id: 'row-5', slot: 5, phone: '', name: 'Budi', hc: 'HC 3B', hcCustom: '', status: '', drawingNumber: null, createdAt: Date.now(), updatedAt: Date.now() }];
-    localStorage.setItem('bilpos_participants', JSON.stringify(participants));
-    localStorage.removeItem('bilpos_bracket');
+    localStorage.setItem('RNR INTAN_participants', JSON.stringify(participants));
+    localStorage.removeItem('RNR INTAN_bracket');
   });
   await page.reload();
   // ensure size is selected

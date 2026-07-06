@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import MatchCard from './MatchCard';
 import { computeMatchMargins, computeMatchTop, computeMatchAreaHeight, computeConnectorHeight } from './bracketUtils';
 
@@ -63,7 +63,7 @@ export default function RoundColumn({
     );
   }
 
-  // ── Round 1 (R0): keep original flex + margin-top layout unchanged ──
+  // â”€â”€ Round 1 (R0): keep original flex + margin-top layout unchanged â”€â”€
   if (isFirstRound) {
     return (
       <div className="round-column">
@@ -79,8 +79,8 @@ export default function RoundColumn({
     );
   }
 
-  // ── Winner rounds (R1+): absolute positioning so each winner bracket
-  //    sits exactly at the median between its two feeder brackets ──
+  // â”€â”€ Winner rounds (R1+): absolute positioning so each winner bracket
+  //    sits exactly at the median between its two feeder brackets â”€â”€
   var matchAreaH = computeMatchAreaHeight(roundIdx, round.length);
   return (
     <div className="round-column">
@@ -98,3 +98,4 @@ export default function RoundColumn({
     </div>
   );
 }
+

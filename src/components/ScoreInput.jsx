@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export default function ScoreInput({ value, onChange, disabled }) {
   return (
@@ -8,9 +8,10 @@ export default function ScoreInput({ value, onChange, disabled }) {
       min="0"
       max="999"
       value={value === null || value === undefined ? '' : value}
-      placeholder="—"
+      placeholder="â€”"
       disabled={disabled}
       onChange={function(e) { onChange(e.target.value); }}
     />
   );
 }
+

@@ -1,4 +1,4 @@
-.bracket-root { display:flex; flex-wrap:wrap; gap:18px; padding:12px; }
+﻿.bracket-root { display:flex; flex-wrap:wrap; gap:18px; padding:12px; }
 .match-card { width:320px; background:linear-gradient(#081022,#07121a); border-radius:12px; padding:12px; box-shadow: 0 6px 18px rgba(0,0,0,.6); border:2px solid rgba(255,255,255,.03); position:relative; }
 .match-card.live { animation: liveBlink 1s infinite; }
 @keyframes liveBlink { 0%{box-shadow:0 0 0 0 rgba(255,0,0,.0); border-color:rgba(255,0,0,.0)} 50%{box-shadow:0 0 6px 3px rgba(255,0,0,.35); border-color:rgba(255,0,0,.9)} 100%{box-shadow:0 0 0 0 rgba(255,0,0,.0); border-color:rgba(255,0,0,.0)} }
@@ -15,3 +15,4 @@
 .match-card .slot.winner { outline: 2px solid rgba(29,185,84,0.15); }
 .match-card .slot.loser { opacity:0.85; filter:grayscale(.06); }
 .live-btn { position:absolute; right:10px; top:8px; background:#ff5252; color:#fff; border:0; padding:6px 8px; border-radius:6px; cursor:pointer; font-weight:700; }
+

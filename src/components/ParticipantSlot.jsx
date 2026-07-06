@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { getParticipantLabel } from './bracketUtils';
 
 var BYE_VALUE = '__bye__';
@@ -24,8 +24,8 @@ export default function ParticipantSlot({
         value={currentId}
         onChange={function(e) { onSelect(e.target.value || null); }}
       >
-        <option value="">— Pilih Peserta —</option>
-        <option value={BYE_VALUE}>— BYE —</option>
+        <option value="">â€” Pilih Peserta â€”</option>
+        <option value={BYE_VALUE}>â€” BYE â€”</option>
         {available.map(function(p) {
           return (
             <option key={p.id} value={String(p.id)}>
@@ -47,3 +47,4 @@ export default function ParticipantSlot({
 
   return <span className="participant-name">{getParticipantLabel(participant)}</span>;
 }
+

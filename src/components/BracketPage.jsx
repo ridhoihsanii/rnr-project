@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import BracketView from './BracketView';
 import { resolveWinner } from './bracketUtils';
 
@@ -72,7 +72,7 @@ export default function BracketPage() {
   // Re-read storage when participants/tournament storage keys change (cross-tab)
   useEffect(function() {
     function onStorage(e) {
-      if (e.key === 'bilpos_participants' || e.key === 'bilpos_tournament') {
+      if (e.key === 'RNR INTAN_participants' || e.key === 'RNR INTAN_tournament') {
         setState(loadInitialState());
       }
     }
@@ -89,15 +89,15 @@ export default function BracketPage() {
         return { bracket: prev.bracket, liveMatchIds: prev.liveMatchIds, participants: participants };
       });
     }
-    window.addEventListener('bilpos:participants-updated', onParticipantsUpdated);
-    return function() { window.removeEventListener('bilpos:participants-updated', onParticipantsUpdated); };
+    window.addEventListener('RNR INTAN:participants-updated', onParticipantsUpdated);
+    return function() { window.removeEventListener('RNR INTAN:participants-updated', onParticipantsUpdated); };
   }, []);
 
   // Re-read storage when bracket nav tab is clicked (bilpos:bracket-activated event)
   useEffect(function() {
     function onActivated() { setState(loadInitialState()); }
-    window.addEventListener('bilpos:bracket-activated', onActivated);
-    return function() { window.removeEventListener('bilpos:bracket-activated', onActivated); };
+    window.addEventListener('RNR INTAN:bracket-activated', onActivated);
+    return function() { window.removeEventListener('RNR INTAN:bracket-activated', onActivated); };
   }, []);
 
   var saveState = useCallback(function(newBracket, newLiveMatchIds) {
@@ -175,10 +175,10 @@ export default function BracketPage() {
       }
 
       // BYE auto-advance rules (no score needed):
-      //   real vs BYE  → real player advances
-      //   BYE vs real  → real player advances
-      //   BYE vs BYE   → BYE advances (propagates to next round as BYE)
-      //   null vs null → nothing advances
+      //   real vs BYE  â†’ real player advances
+      //   BYE vs real  â†’ real player advances
+      //   BYE vs BYE   â†’ BYE advances (propagates to next round as BYE)
+      //   null vs null â†’ nothing advances
       var p1 = match.p1;
       var p2 = match.p2;
       var p1IsReal = p1 && p1.id != null;
@@ -197,7 +197,7 @@ export default function BracketPage() {
         match.status = 'done';
         if (window.BilposTournament) window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, byeWinner);
       } else if (!p1IsReal && !p2IsReal && (p1IsBye || p2IsBye)) {
-        // BYE vs BYE (or BYE vs null) — advance BYE to next round
+        // BYE vs BYE (or BYE vs null) â€” advance BYE to next round
         match.winner = BYE_PARTICIPANT;
         match.status = 'done';
         if (window.BilposTournament) window.BilposTournament.advanceWinner(newBracket, 0, matchIdx, BYE_PARTICIPANT);
@@ -225,7 +225,7 @@ export default function BracketPage() {
   if (!state.bracket || !state.bracket.rounds || state.bracket.rounds.length === 0) {
     return (
       <div className="bracket-empty">
-        <div className="bracket-empty-icon">🏆</div>
+        <div className="bracket-empty-icon">ðŸ†</div>
         <p>Setup tournament terlebih dahulu dan tambahkan peserta di menu Tournament Setup.</p>
       </div>
     );
@@ -259,3 +259,5 @@ export default function BracketPage() {
     />
   );
 }
+
+

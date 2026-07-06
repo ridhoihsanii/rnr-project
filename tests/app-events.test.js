@@ -1,4 +1,4 @@
-const test = require('node:test');
+﻿const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -404,7 +404,7 @@ test('size change dispatches bilpos:bracket-activated event', () => {
   sizeInput.dispatchEvent('change', { target: sizeInput });
 
   assert.ok(
-    loaded.dispatchedEvents.includes('bilpos:bracket-activated'),
+    loaded.dispatchedEvents.includes('RNR INTAN:bracket-activated'),
     'Expected bilpos:bracket-activated to be dispatched when size changes'
   );
 });
@@ -430,7 +430,8 @@ test('clicking bracket nav item dispatches bilpos:bracket-activated event', () =
   bracketNavItem.dispatchEvent('click', {});
 
   assert.ok(
-    loaded.dispatchedEvents.includes('bilpos:bracket-activated'),
+    loaded.dispatchedEvents.includes('RNR INTAN:bracket-activated'),
     'Expected bilpos:bracket-activated to be dispatched when bracket nav is clicked'
   );
 });
+

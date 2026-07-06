@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import "./Bracket.css";
 
 /*
@@ -212,7 +212,8 @@ function ParticipantSelector({ pool, value, onSelect, onRemove }) {
         <option value="">-- pilih peserta --</option>
         {pool.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
       </select>
-      {value && <button className="remove" onClick={onRemove}>×</button>}
+      {value && <button className="remove" onClick={onRemove}>Ã—</button>}
     </div>
   );
 }
+

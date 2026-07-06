@@ -1,13 +1,13 @@
-var BilposStorage = {
+﻿var BilposStorage = {
   KEYS: {
-    TOURNAMENT: 'bilpos_tournament',
-    PARTICIPANTS: 'bilpos_participants',
-    BRACKET: 'bilpos_bracket',
-    SETTINGS: 'bilpos_settings'
+    TOURNAMENT: 'RNR INTAN_tournament',
+    PARTICIPANTS: 'RNR INTAN_participants',
+    BRACKET: 'RNR INTAN_bracket',
+    SETTINGS: 'RNR INTAN_settings'
   },
 
   DEFAULT_TOURNAMENT: {
-    venue: 'Billiard Positif',
+    venue: 'RNR Billiard',
     size: 32,
     status: 'setup',
     currentRound: 0,
@@ -37,7 +37,7 @@ var BilposStorage = {
       localStorage.setItem(key, JSON.stringify(value));
       return true;
     } catch (e) {
-      console.warn('BilposStorage write failed:', e.message);
+      console.warn('RNR INTANStorage write failed:', e.message);
       return false;
     }
   },
@@ -188,3 +188,4 @@ var BilposStorage = {
 if (typeof window !== 'undefined') {
   window.BilposStorage = BilposStorage;
 }
+

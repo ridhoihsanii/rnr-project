@@ -1,8 +1,8 @@
-const { test, expect } = require('@playwright/test');
+﻿const { test, expect } = require('@playwright/test');
 
 const sizes = [16, 32, 64, 128];
 
-test.describe('Bilpos E2E smoke', () => {
+test.describe('RNR INTAN E2E smoke', () => {
   for (const size of sizes) {
     test(`generate bracket for ${size}`, async ({ page }) => {
       // prepare participants and tournament in localStorage
@@ -14,9 +14,9 @@ test.describe('Bilpos E2E smoke', () => {
       // navigate to app origin first so localStorage is accessible, then set data and reload
       await page.goto('/index.html');
       await page.evaluate(({ size, participants }) => {
-        localStorage.setItem('bilpos_tournament', JSON.stringify({ size: size, status: 'setup', currentRound: 0 }));
-        localStorage.setItem('bilpos_participants', JSON.stringify(participants));
-        localStorage.removeItem('bilpos_bracket');
+        localStorage.setItem('RNR INTAN_tournament', JSON.stringify({ size: size, status: 'setup', currentRound: 0 }));
+        localStorage.setItem('RNR INTAN_participants', JSON.stringify(participants));
+        localStorage.removeItem('RNR INTAN_bracket');
       }, { size, participants });
       await page.reload();
 
