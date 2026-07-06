@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <!-- Allow pinch-to-zoom on mobile -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>Bracket Preview â€” RNR INTAN Tournament</title>
+  <title>Bracket Preview — RNR Tournament</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
@@ -14,10 +14,10 @@
   <script>
     firebase.initializeApp({
       apiKey:            'AIzaSyA6h6oCHrKixtZMEyqufpaZsaBrdrtBL1Y',
-      authDomain:        'RNR INTAN-tournament.firebaseapp.com',
+      authDomain:        'bilpos-tournament.firebaseapp.com',
       databaseURL:       'https://bilpos-tournament-default-rtdb.firebaseio.com',
-      projectId:         'RNR INTAN-tournament',
-      storageBucket:     'RNR INTAN-tournament.firebasestorage.app',
+      projectId:         'bilpos-tournament',
+      storageBucket:     'bilpos-tournament.firebasestorage.app',
       messagingSenderId: '1016029844462',
       appId:             '1:1016029844462:web:159e221b47c584eed0b4ff'
     });
@@ -49,7 +49,7 @@
       overflow: hidden; /* pan+zoom container handles scrolling */
     }
 
-    /* â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Header ───────────────────────────────────────── */
     .preview-header {
       position: sticky;
       top: 0;
@@ -85,7 +85,7 @@
       gap: 6px;
     }
 
-    /* â”€â”€ Pan + Zoom outer container â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Pan + Zoom outer container ──────────────────── */
     #bracket-outer {
       position: fixed;
       top: 52px;
@@ -97,7 +97,7 @@
     }
     #bracket-outer:active { cursor: grabbing; }
 
-    /* â”€â”€ Bracket scroll area (no overflow â€” panning handles it) â”€â”€ */
+    /* ── Bracket scroll area (no overflow — panning handles it) ── */
     .bracket-scroll {
       display: flex;
       flex-direction: row;
@@ -106,7 +106,7 @@
       padding: 24px 32px 64px;
     }
 
-    /* â”€â”€ Round column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Round column ─────────────────────────────────── */
     .round-col {
       display: flex;
       flex-direction: column;
@@ -128,7 +128,7 @@
       white-space: nowrap;
     }
 
-    /* â”€â”€ Match area (R1+ absolute container) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Match area (R1+ absolute container) ──────────── */
     .match-area {
       position: relative;
       overflow: visible;
@@ -136,7 +136,7 @@
       flex-shrink: 0;
     }
 
-    /* â”€â”€ Match wrapper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Match wrapper ────────────────────────────────── */
     .match-wrap {
       position: relative;
       overflow: visible;
@@ -177,7 +177,7 @@
       border-right: 2px solid #94a3b8;
     }
 
-    /* â”€â”€ Match card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Match card ───────────────────────────────────── */
     .mc {
       width: var(--card-w);
       height: var(--card-h);
@@ -260,7 +260,7 @@
     .mc-badge.win  { background: rgba(22,163,74,0.12);  color: var(--green); border: 1px solid rgba(22,163,74,0.3); }
     .mc-badge.lose { background: rgba(220,38,38,0.08);  color: var(--red);   border: 1px solid rgba(220,38,38,0.2); }
 
-    /* â”€â”€ Error / empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Error / empty state ──────────────────────────── */
     .empty-state {
       display: flex;
       flex-direction: column;
@@ -275,7 +275,7 @@
     .empty-state .icon { font-size: 48px; }
     .empty-state p { font-size: 14px; max-width: 400px; }
 
-    /* â”€â”€ QR card (fixed top-right, hidden by default) â”€â”€â”€ */
+    /* ── QR card (fixed top-right, hidden by default) ─── */
     .qr-card {
       position: fixed;
       top: 68px;
@@ -348,7 +348,7 @@
     }
     .btn-qr:hover { background: rgba(217,119,6,0.2); }
 
-    /* â”€â”€ Zoom controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Zoom controls ────────────────────────────────── */
     .zoom-controls {
       display: flex;
       align-items: center;
@@ -425,7 +425,7 @@
     .zoom-option:hover { background: #f1f5f9; color: #d97706; }
     .zoom-option.active { color: #d97706; background: rgba(217,119,6,0.08); }
 
-    /* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Responsive ───────────────────────────────────── */
     @media (max-width: 600px) {
       :root { --card-w: 220px; }
       .bracket-scroll { padding: 16px 16px 64px; gap: 36px; }
@@ -438,23 +438,23 @@
 
 <header class="preview-header">
   <div class="preview-brand">
-    <span>ðŸ†</span>
+    <span>🏆</span>
     <div>
-      <div id="preview-title">RNR INTAN Tournament</div>
+      <div id="preview-title">RNR Tournament</div>
       <div class="sub">Bracket Preview</div>
     </div>
   </div>
   <div class="preview-hint">
-    <span>ðŸ‘ Read-only</span>
-    <span>Â·</span>
-    <span>ðŸ“± Pinch Â· Drag to pan</span>
-    <span>Â·</span>
+    <span>👁 Read-only</span>
+    <span>·</span>
+    <span>📱 Pinch · Drag to pan</span>
+    <span>·</span>
     <div class="zoom-controls">
-      <button class="zoom-btn" id="btn-zoom-out" title="Zoom out">âˆ’</button>
+      <button class="zoom-btn" id="btn-zoom-out" title="Zoom out">−</button>
       <div class="zoom-display">
         <button class="zoom-display-btn" id="btn-zoom-display" title="Pilih zoom">FIT</button>
         <div class="zoom-dropdown" id="zoom-dropdown">
-          <button class="zoom-option" data-zoom="fit">âŠ¡ FIT</button>
+          <button class="zoom-option" data-zoom="fit">⊡ FIT</button>
           <button class="zoom-option" data-zoom="0.25">25%</button>
           <button class="zoom-option" data-zoom="0.5">50%</button>
           <button class="zoom-option" data-zoom="0.75">75%</button>
@@ -465,7 +465,7 @@
       </div>
       <button class="zoom-btn" id="btn-zoom-in" title="Zoom in">+</button>
     </div>
-    <button id="btn-qr" class="btn-qr">ðŸ“² QR CODE</button>
+    <button id="btn-qr" class="btn-qr">📲 QR CODE</button>
   </div>
 </header>
 
@@ -475,22 +475,22 @@
 
 <div class="qr-card" id="qr-card" style="display:none">
   <div class="qr-card-header">
-    <div class="qr-title">ðŸ“² Scan to Share</div>
-    <button class="qr-close" id="qr-close" title="Tutup">âœ•</button>
+    <div class="qr-title">📲 Scan to Share</div>
+    <button class="qr-close" id="qr-close" title="Tutup">✕</button>
   </div>
   <div id="qr-wrap" style="display:flex;align-items:center;justify-content:center;min-width:100px;min-height:100px;">
-    <span id="qr-status" style="font-size:10px;color:#64748b;text-align:center;">Generatingâ€¦</span>
+    <span id="qr-status" style="font-size:10px;color:#64748b;text-align:center;">Generating…</span>
   </div>
-  <button class="qr-copy" id="qr-copy-btn">ðŸ“‹ Copy link</button>
+  <button class="qr-copy" id="qr-copy-btn">📋 Copy link</button>
 </div>
 
 <script>
-// â”€â”€ Constants (must match bracketUtils.js) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Constants (must match bracketUtils.js) ─────────────────────────────
 var CARD_HEIGHT = 100;
 var CARD_GAP    = 8;
 var ARM_LENGTH  = 24;
 
-// â”€â”€ Positioning helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Positioning helpers ────────────────────────────────────────────────
 function computeMatchMargins(matchIdx) {
   var step   = (CARD_HEIGHT + CARD_GAP); // R0: step=108
   var offset = step / 2 - CARD_HEIGHT / 2; // =4
@@ -531,7 +531,7 @@ function getMatchNumOffset(roundIdx, totalRounds) {
   return offset;
 }
 
-// â”€â”€ Participant display helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Participant display helpers ────────────────────────────────────────
 function pLabel(p) {
   if (!p) return null;
   if (p.name === 'BYE') return 'BYE';
@@ -542,11 +542,11 @@ function pLabel(p) {
 function pIsBye(p) { return p && p.name === 'BYE'; }
 function pIsReal(p) { return p && p.id != null && p.name !== 'BYE'; }
 
-// â”€â”€ Render bracket â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Render bracket ─────────────────────────────────────────────────────
 function renderBracket(bracket, liveMatchId) {
   var root = document.getElementById('bracket-root');
   if (!bracket || !bracket.rounds || !bracket.rounds.length) {
-    root.innerHTML = '<div class="empty-state"><div class="icon">ðŸ†</div><p>Bracket belum tersedia. Buka halaman utama dan buat bracket terlebih dahulu.</p></div>';
+    root.innerHTML = '<div class="empty-state"><div class="icon">🏆</div><p>Bracket belum tersedia. Buka halaman utama dan buat bracket terlebih dahulu.</p></div>';
     return;
   }
 
@@ -643,7 +643,7 @@ function buildMatchCard(match, matchNum, liveMatchIds) {
   if (isLive) {
     var lb = document.createElement('span');
     lb.className = 'live-badge';
-    lb.textContent = 'ðŸ”´ LIVE';
+    lb.textContent = '🔴 LIVE';
     hdr.appendChild(lb);
   }
   card.appendChild(hdr);
@@ -692,7 +692,7 @@ function buildMatchCard(match, matchNum, liveMatchIds) {
   return card;
 }
 
-// â”€â”€ QR code (qrcode-generator: crisp canvas, scannable) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── QR code (qrcode-generator: crisp canvas, scannable) ───────────────
 function initQR() {
   var url     = window.location.href;
   var wrap    = document.getElementById('qr-wrap');
@@ -741,8 +741,8 @@ function initQR() {
   copyBtn.addEventListener('click', function() {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url).then(function() {
-        copyBtn.textContent = 'âœ… Copied!';
-        setTimeout(function() { copyBtn.textContent = 'ðŸ“‹ Copy link'; }, 2000);
+        copyBtn.textContent = '✅ Copied!';
+        setTimeout(function() { copyBtn.textContent = '📋 Copy link'; }, 2000);
       });
     } else {
       var ta = document.createElement('textarea');
@@ -751,13 +751,13 @@ function initQR() {
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      copyBtn.textContent = 'âœ… Copied!';
-      setTimeout(function() { copyBtn.textContent = 'ðŸ“‹ Copy link'; }, 2000);
+      copyBtn.textContent = '✅ Copied!';
+      setTimeout(function() { copyBtn.textContent = '📋 Copy link'; }, 2000);
     }
   });
 }
 
-// â”€â”€ Pan + Pinch Zoom â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Pan + Pinch Zoom ───────────────────────────────────────────────────
 (function() {
   var outer = document.getElementById('bracket-outer');
   var inner = document.getElementById('bracket-root');
@@ -774,7 +774,7 @@ function initQR() {
     updateZoomDisplay();
   }
 
-  /* â”€â”€ Zoom display label â”€â”€ */
+  /* ── Zoom display label ── */
   var zoomDisplayBtn = document.getElementById('btn-zoom-display');
   var zoomDropdown   = document.getElementById('zoom-dropdown');
   var isFitMode      = true; // track whether current scale = auto-fit scale
@@ -783,7 +783,7 @@ function initQR() {
   function updateZoomDisplay() {
     if (!zoomDisplayBtn) return;
     var pct = Math.round(scale * 100);
-    zoomDisplayBtn.textContent = (isFitMode ? 'âŠ¡ FIT' : pct + '%');
+    zoomDisplayBtn.textContent = (isFitMode ? '⊡ FIT' : pct + '%');
     // highlight active option
     if (zoomDropdown) {
       Array.prototype.forEach.call(zoomDropdown.querySelectorAll('.zoom-option'), function(opt) {
@@ -818,7 +818,7 @@ function initQR() {
     applyTransform();
   }
 
-  /* â”€â”€ Zoom +/âˆ’ buttons â”€â”€ */
+  /* ── Zoom +/− buttons ── */
   var STEPS = [0.1, 0.15, 0.2, 0.25, 0.33, 0.4, 0.5, 0.6, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4];
   function snapDown(s) {
     for (var i = STEPS.length - 1; i >= 0; i--) if (STEPS[i] < s - 0.01) return STEPS[i];
@@ -834,7 +834,7 @@ function initQR() {
   if (zoomOutBtn) zoomOutBtn.addEventListener('click', function() { setZoom(snapDown(scale)); });
   if (zoomInBtn)  zoomInBtn.addEventListener('click',  function() { setZoom(snapUp(scale)); });
 
-  /* â”€â”€ Zoom dropdown â”€â”€ */
+  /* ── Zoom dropdown ── */
   if (zoomDisplayBtn && zoomDropdown) {
     zoomDisplayBtn.addEventListener('click', function(e) {
       e.stopPropagation();
@@ -852,7 +852,7 @@ function initQR() {
     });
   }
 
-  // â”€â”€ Touch (1 finger = pan, 2 fingers = pinch zoom + pan) â”€â”€
+  // ── Touch (1 finger = pan, 2 fingers = pinch zoom + pan) ──
   var startPanX, startPanY, startScale, startDist, startMid;
 
   outer.addEventListener('touchstart', function(e) {
@@ -892,7 +892,7 @@ function initQR() {
 
   outer.addEventListener('touchend', function() { startMid = null; });
 
-  // â”€â”€ Mouse drag (desktop pan) â”€â”€
+  // ── Mouse drag (desktop pan) ──
   var dragging = false, dragStartX, dragStartY, dragPanX, dragPanY;
   outer.addEventListener('mousedown', function(e) {
     dragging = true;
@@ -908,7 +908,7 @@ function initQR() {
   });
   window.addEventListener('mouseup', function() { dragging = false; });
 
-  // â”€â”€ Mouse wheel (desktop zoom) â”€â”€
+  // ── Mouse wheel (desktop zoom) ──
   outer.addEventListener('wheel', function(e) {
     e.preventDefault();
     var factor  = e.deltaY > 0 ? 0.85 : 1 / 0.85;
@@ -929,9 +929,9 @@ function initQR() {
   setTimeout(autoFit, 250);
 })();
 
-// â”€â”€ Main: Firebase (?id=) atau hash fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Main: Firebase (?id=) atau hash fallback ──────────────────────────
 (function() {
-  /* â”€â”€ QR toggle (shared antara kedua mode) â”€â”€ */
+  /* ── QR toggle (shared antara kedua mode) ── */
   var qrCard   = document.getElementById('qr-card');
   var qrBtn    = document.getElementById('btn-qr');
   var qrClose  = document.getElementById('qr-close');
@@ -948,12 +948,12 @@ function initQR() {
   });
   qrClose.addEventListener('click', hideQR);
 
-  /* â”€â”€ Helper: terapkan data bracket ke halaman â”€â”€ */
+  /* ── Helper: terapkan data bracket ke halaman ── */
   function applyPayload(data) {
     if (!data) return;
-    var title = (data.tournament && (data.tournament.venue || data.tournament.name)) || 'RNR INTAN Tournament';
+    var title = (data.tournament && (data.tournament.venue || data.tournament.name)) || 'RNR Tournament';
     document.getElementById('preview-title').textContent = title;
-    document.title = title + ' â€” Bracket Preview';
+    document.title = title + ' — Bracket Preview';
     var root = document.getElementById('bracket-root');
     root.innerHTML = '';
     var ids = Array.isArray(data.liveMatchIds) ? data.liveMatchIds : [];
@@ -961,7 +961,7 @@ function initQR() {
     if (typeof window.__bilposAutoFit === 'function') setTimeout(window.__bilposAutoFit, 100);
   }
 
-  /* â”€â”€ Mode 1: Firebase â€” URL pendek, real-time cross-device â”€â”€ */
+  /* ── Mode 1: Firebase — URL pendek, real-time cross-device ── */
   var searchParams = new URLSearchParams(window.location.search);
   var firebaseId   = searchParams.get('id');
 
@@ -973,30 +973,30 @@ function initQR() {
           var data = snapshot.val();
           if (!data || !data.bracket) {
             document.getElementById('bracket-root').innerHTML =
-              '<div class="empty-state"><div class="icon">â³</div><p>Bracket belum tersedia. Buka halaman utama dan klik PREVIEW terlebih dahulu.</p></div>';
+              '<div class="empty-state"><div class="icon">⏳</div><p>Bracket belum tersedia. Buka halaman utama dan klik PREVIEW terlebih dahulu.</p></div>';
             return;
           }
           applyPayload(data);
         }, function(err) {
           document.getElementById('bracket-root').innerHTML =
-            '<div class="empty-state"><div class="icon">âš ï¸</div><p>Gagal memuat dari Firebase: ' + err.message + '</p></div>';
+            '<div class="empty-state"><div class="icon">⚠️</div><p>Gagal memuat dari Firebase: ' + err.message + '</p></div>';
         });
       } catch(e) {
         document.getElementById('bracket-root').innerHTML =
-          '<div class="empty-state"><div class="icon">âš ï¸</div><p>Firebase error: ' + e.message + '</p></div>';
+          '<div class="empty-state"><div class="icon">⚠️</div><p>Firebase error: ' + e.message + '</p></div>';
       }
     } else {
       document.getElementById('bracket-root').innerHTML =
-        '<div class="empty-state"><div class="icon">âš ï¸</div><p>Firebase SDK belum dimuat.</p></div>';
+        '<div class="empty-state"><div class="icon">⚠️</div><p>Firebase SDK belum dimuat.</p></div>';
     }
     return; // QR & toggle sudah selesai
   }
 
-  /* â”€â”€ Mode 2: Hash fallback (URL lama / backward compat) â”€â”€ */
+  /* ── Mode 2: Hash fallback (URL lama / backward compat) ── */
   var hash = window.location.hash.slice(1);
   if (!hash) {
     document.getElementById('bracket-root').innerHTML =
-      '<div class="empty-state"><div class="icon">ðŸ”—</div><p>Tidak ada data bracket. Buka halaman utama dan klik tombol PREVIEW.</p></div>';
+      '<div class="empty-state"><div class="icon">🔗</div><p>Tidak ada data bracket. Buka halaman utama dan klik tombol PREVIEW.</p></div>';
     return;
   }
 
@@ -1008,7 +1008,7 @@ function initQR() {
     payload = JSON.parse(json);
   } catch(e) {
     document.getElementById('bracket-root').innerHTML =
-      '<div class="empty-state"><div class="icon">âš ï¸</div><p>Data bracket tidak dapat dibaca. Coba klik Preview lagi dari halaman utama.</p></div>';
+      '<div class="empty-state"><div class="icon">⚠️</div><p>Data bracket tidak dapat dibaca. Coba klik Preview lagi dari halaman utama.</p></div>';
     return;
   }
 
@@ -1016,7 +1016,7 @@ function initQR() {
 
   // Same-browser real-time via storage event (hash mode)
   window.addEventListener('storage', function(e) {
-    if (e.key !== 'RNR INTAN_bracket' || !e.newValue) return;
+    if (e.key !== 'bilpos_bracket' || !e.newValue) return;
     try {
       var data = JSON.parse(e.newValue);
       if (!data || !data.bracket) return;
@@ -1027,5 +1027,3 @@ function initQR() {
 </script>
 </body>
 </html>
-
-
