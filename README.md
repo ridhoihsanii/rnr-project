@@ -1,6 +1,6 @@
-# BILPOS — Billiard Positif Tournament System
+﻿# RNR INTAN â€” RNR Billiard Tournament System
 
-Professional billiard tournament management software for Billiard Positif.
+Professional billiard tournament management software for RNR Billiard.
 
 ![Pure Frontend](https://img.shields.io/badge/Pure%20Frontend-HTML%2FCSS%2FJS-FACC15?style=for-the-badge&labelColor=0A0A0A)
 ![No Backend](https://img.shields.io/badge/No%20Backend-Local%20Only-FACC15?style=for-the-badge&labelColor=0A0A0A)
@@ -28,7 +28,7 @@ Professional billiard tournament management software for Billiard Positif.
 
 ## Screenshots
 
-> 📸 Screenshot coming soon
+> ðŸ“¸ Screenshot coming soon
 
 ## Tech Stack
 
@@ -43,19 +43,19 @@ Professional billiard tournament management software for Billiard Positif.
 
 ```text
 bilpos-project/
-├── index.html              # Main application shell
-├── assets/
-│   ├── css/
-│   │   └── style.css       # Bilpos design system
-│   ├── js/
-│   │   ├── storage.js      # LocalStorage layer
-│   │   ├── drawing.js      # Drawing/slot system
-│   │   ├── tournament.js   # Tournament logic
-│   │   ├── bracket.js      # Bracket renderer
-│   │   ├── ui.js           # UI helpers
-│   │   └── app.js          # Main application
-│   └── img/                # Images (optional)
-└── README.md
+â”œâ”€â”€ index.html              # Main application shell
+â”œâ”€â”€ assets/
+â”‚   â”œâ”€â”€ css/
+â”‚   â”‚   â””â”€â”€ style.css       # Bilpos design system
+â”‚   â”œâ”€â”€ js/
+â”‚   â”‚   â”œâ”€â”€ storage.js      # LocalStorage layer
+â”‚   â”‚   â”œâ”€â”€ drawing.js      # Drawing/slot system
+â”‚   â”‚   â”œâ”€â”€ tournament.js   # Tournament logic
+â”‚   â”‚   â”œâ”€â”€ bracket.js      # Bracket renderer
+â”‚   â”‚   â”œâ”€â”€ ui.js           # UI helpers
+â”‚   â”‚   â””â”€â”€ app.js          # Main application
+â”‚   â””â”€â”€ img/                # Images (optional)
+â””â”€â”€ README.md
 ```
 
 ## Installation & Usage
@@ -64,7 +64,7 @@ bilpos-project/
 
 1. Clone or download the repository.
 2. Open `index.html` in a browser.
-3. No build step required — just open and use.
+3. No build step required â€” just open and use.
 
 ### GitHub Pages
 
@@ -72,7 +72,7 @@ This repository includes an automated GitHub Actions workflow that builds and de
 
 1. Push the project to a GitHub repository (already done).
 2. Workflow will run and publish to Pages. The site is expected at `https://<your-username>.github.io/bilpos-project/`.
-3. If Pages shows 404, wait ~1–2 minutes for provisioning, or check Actions → Workflows for build logs.
+3. If Pages shows 404, wait ~1â€“2 minutes for provisioning, or check Actions â†’ Workflows for build logs.
 ## Usage Guide
 
 - **Dashboard**: Overview of tournament stats.
@@ -84,8 +84,9 @@ This repository includes an automated GitHub Actions workflow that builds and de
 
 ## Branding
 
-BILPOS follows the **BILLIARD POSITIF** visual identity with a premium yellow and black color scheme, centered on **#FACC15** and **#0A0A0A** for a strong, modern tournament presentation.
+BILPOS follows the **RNR Billiard** visual identity with a premium yellow and black color scheme, centered on **#FACC15** and **#0A0A0A** for a strong, modern tournament presentation.
 
 ---
 
-Built with ❤️ by Ihsan
+Built with â¤ï¸ by Ihsan
+

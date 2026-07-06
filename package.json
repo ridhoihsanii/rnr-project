@@ -1,7 +1,7 @@
-{
-  "name": "bilpos-project",
+﻿{
+  "name": "RNR INTAN-project",
   "version": "1.0.0",
-  "description": "Professional billiard tournament management software for Billiard Positif.",
+  "description": "Professional billiard tournament management software for RNR Billiard.",
   "main": "playwright.config.js",
   "directories": {
     "doc": "docs",
@@ -25,3 +25,4 @@
     "react-dom": "18.2.0"
   }
 }
+

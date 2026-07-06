@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import ParticipantSlot from './ParticipantSlot';
 import ScoreInput from './ScoreInput';
 
@@ -31,7 +31,7 @@ export default function MatchCard({
           disabled={isByeMatch}
           title={isLive ? 'Nonaktifkan LIVE' : 'Tandai sebagai LIVE'}
         >
-          {isLive ? '🔴 LIVE' : 'LIVE'}
+          {isLive ? 'ðŸ”´ LIVE' : 'LIVE'}
         </button>
       </div>
 
@@ -83,3 +83,4 @@ export default function MatchCard({
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-const test = require('node:test');
+﻿const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -291,7 +291,7 @@ function createElement(document, tagName, options) {
 
 function mountBaseDom(document) {
   const toastContainer = createElement(document, 'div', { id: 'toast-container' });
-  const sidebar = createElement(document, 'aside', { className: 'bilpos-sidebar' });
+  const sidebar = createElement(document, 'aside', { className: 'RNR INTAN-sidebar' });
   const overlay = createElement(document, 'div', { className: 'sidebar-overlay' });
   const headerVenue = createElement(document, 'div', { id: 'header-venue' });
   const headerStatus = createElement(document, 'div', { id: 'header-status' });
@@ -333,11 +333,11 @@ function mountBaseDom(document) {
   });
   const dashboardSection = createElement(document, 'section', {
     id: 'section-dashboard',
-    className: 'bilpos-section active'
+    className: 'RNR INTAN-section active'
   });
   const participantsSection = createElement(document, 'section', {
     id: 'section-participants',
-    className: 'bilpos-section'
+    className: 'RNR INTAN-section'
   });
 
   document.body.appendChild(dashboardNav);
@@ -361,7 +361,7 @@ function loadUi() {
   };
 }
 
-test('BilposUI exposes the required public API', () => {
+test('RNR INTANUI exposes the required public API', () => {
   const uiPath = path.join(process.cwd(), 'assets', 'js', 'ui.js');
   assert.ok(fs.existsSync(uiPath), 'assets/js/ui.js should exist');
 
@@ -555,3 +555,4 @@ test('rippleEffect adds a ripple element at the click point and removes it', asy
   await wait(650);
   assert.equal(button.querySelector('.ripple'), null);
 });
+

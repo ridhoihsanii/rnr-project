@@ -1,4 +1,4 @@
-# Tournament Bracket Module Implementation Plan
+﻿# Tournament Bracket Module Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -10,15 +10,15 @@
 
 ## Global Constraints
 
-- React 18.2.0 — no upgrade
-- esbuild 0.19.x — build command: `npm run build` (from project root)
+- React 18.2.0 â€” no upgrade
+- esbuild 0.19.x â€” build command: `npm run build` (from project root)
 - All files in `src/components/` use `.jsx` extension; pure-logic utilities use `.js`
 - CSS class naming: `bracket-view`, `round-column`, `match-wrapper`, `match-card`, `match-slot`, `participant-select`, `participant-label`, `score-input`, `live-btn`, `badge`
-- `window.BilposStorage` and `window.BilposTournament` are globals — never import them
-- Storage key for bracket: `bilpos_bracket` — value shape: `{ bracket: {...}, liveMatchId: string|null }`
-- Participant shape: `{ id, name, hc, hcCustom, slot, status }` — `hc` is the preset value (e.g. `"HC 3B"`), `hcCustom` is the override string
+- `window.BilposStorage` and `window.BilposTournament` are globals â€” never import them
+- Storage key for bracket: `bilpos_bracket` â€” value shape: `{ bracket: {...}, liveMatchId: string|null }`
+- Participant shape: `{ id, name, hc, hcCustom, slot, status }` â€” `hc` is the preset value (e.g. `"HC 3B"`), `hcCustom` is the override string
 - CARD_HEIGHT = 100 (px), CARD_GAP = 8 (px), ROUND_GAP = 48 (px), ARM_LENGTH = 24 (px = ROUND_GAP / 2)
-- Do NOT break existing `tests/bracket.test.js` or `tests/tournament.test.js` — those test `assets/js/bracket.js` and `assets/js/tournament.js` which are not modified
+- Do NOT break existing `tests/bracket.test.js` or `tests/tournament.test.js` â€” those test `assets/js/bracket.js` and `assets/js/tournament.js` which are not modified
 - Run unit tests: `node --test tests/<file>.test.js`
 - Run build: `npm run build` (from project root)
 
@@ -78,7 +78,7 @@ The full `<nav>` block should look like:
 In `index.html`, find the closing `</section>` of `section-participants` (around line ~169). Add the new section immediately after it, before the `<footer>`:
 
 ```html
-<section class="bilpos-section" id="section-bracket">
+<section class="RNR INTAN-section" id="section-bracket">
   <div class="section-header">
     <div class="section-title">
       <i class="fas fa-sitemap"></i>
@@ -127,15 +127,15 @@ git commit -m "feat: add bracket section and nav item to index.html"
 
 **Interfaces:**
 - Produces (for other components to import):
-  - `const CARD_HEIGHT = 100` — number
-  - `const CARD_GAP = 8` — number
-  - `const ROUND_GAP = 48` — number
-  - `const ARM_LENGTH = 24` — number
-  - `getHcLabel(p)` → `string` — converts `{ hc, hcCustom }` to display string
-  - `getParticipantLabel(p)` → `string` — `"Name - HC label"` or just `"Name"`
-  - `computeMatchMargins(roundIdx, matchIdx)` → `{ marginTop: number }` — px values for flex spacing
-  - `computeConnectorHeight(roundIdx)` → `number` — height in px of the vertical connector line
-  - `resolveWinner(match)` → `participant | null` — returns p1 or p2 based on scores, null if tied/incomplete
+  - `const CARD_HEIGHT = 100` â€” number
+  - `const CARD_GAP = 8` â€” number
+  - `const ROUND_GAP = 48` â€” number
+  - `const ARM_LENGTH = 24` â€” number
+  - `getHcLabel(p)` â†’ `string` â€” converts `{ hc, hcCustom }` to display string
+  - `getParticipantLabel(p)` â†’ `string` â€” `"Name - HC label"` or just `"Name"`
+  - `computeMatchMargins(roundIdx, matchIdx)` â†’ `{ marginTop: number }` â€” px values for flex spacing
+  - `computeConnectorHeight(roundIdx)` â†’ `number` â€” height in px of the vertical connector line
+  - `resolveWinner(match)` â†’ `participant | null` â€” returns p1 or p2 based on scores, null if tied/incomplete
 
 - [ ] **Step 1: Write the failing test file**
 
@@ -148,7 +148,7 @@ const path = require('node:path');
 
 const utils = require(path.join(process.cwd(), 'src', 'components', 'bracketUtils.js'));
 
-// ── getHcLabel ──────────────────────────────────────────────────
+// â”€â”€ getHcLabel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 test('getHcLabel returns preset hc value', () => {
   assert.equal(utils.getHcLabel({ hc: 'HC 3B', hcCustom: '' }), 'HC 3B');
 });
@@ -169,7 +169,7 @@ test('getHcLabel returns empty string when both hc and hcCustom are empty', () =
   assert.equal(utils.getHcLabel({ hc: '', hcCustom: '' }), '');
 });
 
-// ── getParticipantLabel ─────────────────────────────────────────
+// â”€â”€ getParticipantLabel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 test('getParticipantLabel formats name and HC', () => {
   assert.equal(utils.getParticipantLabel({ name: 'Ihsan', hc: 'HC 3B', hcCustom: '' }), 'Ihsan - HC 3B');
 });
@@ -182,7 +182,7 @@ test('getParticipantLabel returns empty string for null', () => {
   assert.equal(utils.getParticipantLabel(null), '');
 });
 
-// ── computeMatchMargins ─────────────────────────────────────────
+// â”€â”€ computeMatchMargins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 test('computeMatchMargins roundIdx=0 matchIdx=0 returns correct offset', () => {
   // step(0) = (100+8)*1 = 108; offset = 108/2 - 50 = 4
   const { marginTop } = utils.computeMatchMargins(0, 0);
@@ -207,7 +207,7 @@ test('computeMatchMargins roundIdx=1 matchIdx=1 returns gap', () => {
   assert.equal(marginTop, 116);
 });
 
-// ── computeConnectorHeight ──────────────────────────────────────
+// â”€â”€ computeConnectorHeight â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 test('computeConnectorHeight round 0 is step/2', () => {
   // step(0)=108, connector=54
   assert.equal(utils.computeConnectorHeight(0), 54);
@@ -221,7 +221,7 @@ test('computeConnectorHeight round 2 is quadruple round 0', () => {
   assert.equal(utils.computeConnectorHeight(2), 216);
 });
 
-// ── resolveWinner ───────────────────────────────────────────────
+// â”€â”€ resolveWinner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 test('resolveWinner returns p1 when score1 > score2', () => {
   const p1 = { id: 'a', name: 'Alice' };
   const p2 = { id: 'b', name: 'Bob' };
@@ -265,7 +265,7 @@ test('resolveWinner returns null for null match', () => {
 node --test tests/bracket-react.test.js
 ```
 
-Expected: `Error: Cannot find module '...bracketUtils.js'` — confirms the test correctly fails before implementation.
+Expected: `Error: Cannot find module '...bracketUtils.js'` â€” confirms the test correctly fails before implementation.
 
 - [ ] **Step 3: Create `src/components/bracketUtils.js`**
 
@@ -293,7 +293,7 @@ function getParticipantLabel(p) {
   return hc ? p.name + ' - ' + hc : p.name;
 }
 
-// Returns { marginTop: number } — apply as inline style on .match-wrapper
+// Returns { marginTop: number } â€” apply as inline style on .match-wrapper
 function computeMatchMargins(roundIdx, matchIdx) {
   var step   = (CARD_HEIGHT + CARD_GAP) * Math.pow(2, roundIdx);
   var offset = step / 2 - CARD_HEIGHT / 2;
@@ -338,7 +338,7 @@ module.exports = {
 node --test tests/bracket-react.test.js
 ```
 
-Expected: all 20 tests pass, `▶ bracket-react` suite shows `pass 20`.
+Expected: all 20 tests pass, `â–¶ bracket-react` suite shows `pass 20`.
 
 - [ ] **Step 5: Commit**
 
@@ -362,12 +362,12 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
 
 ```css
 /* ================================================================
-   BILPOS Tournament Bracket — React Component Styles
+   RNR INTAN Tournament Bracket â€” React Component Styles
    Constants (must match bracketUtils.js): CARD_HEIGHT=100px, CARD_GAP=8px,
    ROUND_GAP=48px, ARM_LENGTH=24px
    ================================================================ */
 
-/* ── Horizontal scroll container ─────────────────────────────── */
+/* â”€â”€ Horizontal scroll container â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bracket-view {
   display: flex;
   flex-direction: row;
@@ -380,7 +380,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   -webkit-overflow-scrolling: touch;
 }
 
-/* ── Round column ─────────────────────────────────────────────── */
+/* â”€â”€ Round column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .round-column {
   display: flex;
   flex-direction: column;
@@ -403,14 +403,14 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   white-space: nowrap;
 }
 
-/* ── Match wrapper (position anchor for connector lines) ─────── */
+/* â”€â”€ Match wrapper (position anchor for connector lines) â”€â”€â”€â”€â”€â”€â”€ */
 .match-wrapper {
   position: relative;
   overflow: visible;
   width: 260px;
 }
 
-/* Left arm: midpoint of gap → left edge of card (round 2+) */
+/* Left arm: midpoint of gap â†’ left edge of card (round 2+) */
 .match-wrapper.has-left-arm::before {
   content: '';
   position: absolute;
@@ -446,10 +446,10 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   border-right: 2px solid rgba(55, 75, 100, 0.85);
 }
 
-/* ── Match card ───────────────────────────────────────────────── */
+/* â”€â”€ Match card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .match-card {
   width: 260px;
-  height: 100px; /* = CARD_HEIGHT — must match bracketUtils.CARD_HEIGHT */
+  height: 100px; /* = CARD_HEIGHT â€” must match bracketUtils.CARD_HEIGHT */
   background: linear-gradient(135deg, #0d1b2a 0%, #0a1520 100%);
   border-radius: 10px;
   border: 1.5px solid rgba(255, 255, 255, 0.06);
@@ -466,7 +466,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   border-color: rgba(250, 204, 21, 0.2);
 }
 
-/* ── LIVE blinking animation ─────────────────────────────────── */
+/* â”€â”€ LIVE blinking animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .match-card.live {
   animation: liveBlink 1s ease-in-out infinite;
 }
@@ -483,7 +483,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   }
 }
 
-/* ── Match header row ─────────────────────────────────────────── */
+/* â”€â”€ Match header row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .match-header {
   display: flex;
   justify-content: space-between;
@@ -499,7 +499,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   text-transform: uppercase;
 }
 
-/* ── LIVE button ─────────────────────────────────────────────── */
+/* â”€â”€ LIVE button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .live-btn {
   font-size: 9px;
   font-weight: 700;
@@ -529,7 +529,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   cursor: default;
 }
 
-/* ── Participant slot row ─────────────────────────────────────── */
+/* â”€â”€ Participant slot row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .match-slot {
   display: flex;
   align-items: center;
@@ -552,7 +552,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   border-left-color: rgba(239, 68, 68, 0.25);
 }
 
-/* ── Participant display ─────────────────────────────────────── */
+/* â”€â”€ Participant display â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .participant-select {
   flex: 1;
   min-width: 0;
@@ -592,7 +592,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   font-style: italic;
 }
 
-/* ── Score input ─────────────────────────────────────────────── */
+/* â”€â”€ Score input â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .score-input {
   width: 40px;
   flex-shrink: 0;
@@ -621,7 +621,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   -moz-appearance: textfield;
 }
 
-/* ── WIN / LOSE badges ───────────────────────────────────────── */
+/* â”€â”€ WIN / LOSE badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   flex-shrink: 0;
   font-size: 8px;
@@ -644,7 +644,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-/* ── Empty state ─────────────────────────────────────────────── */
+/* â”€â”€ Empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bracket-empty {
   text-align: center;
   padding: 64px 24px;
@@ -660,7 +660,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   font-size: 14px;
 }
 
-/* ── Responsive ──────────────────────────────────────────────── */
+/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 767px) {
   .bracket-view {
     padding: 16px;
@@ -679,7 +679,7 @@ git commit -m "feat: add bracketUtils pure logic + unit tests"
   .participant-label { font-size: 9px; }
 }
 
-/* ── Light theme overrides ───────────────────────────────────── */
+/* â”€â”€ Light theme overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 [data-theme='light'] .match-card {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-color: #e2e8f0;
@@ -822,7 +822,7 @@ export default function BracketPage() {
   // Re-read storage when participants/tournament storage keys change
   useEffect(function() {
     function onStorage(e) {
-      if (e.key === 'bilpos_participants' || e.key === 'bilpos_tournament') {
+      if (e.key === 'RNR INTAN_participants' || e.key === 'RNR INTAN_tournament') {
         setState(loadInitialState());
       }
     }
@@ -833,8 +833,8 @@ export default function BracketPage() {
   // Re-read storage when bracket nav tab is clicked (bilpos:bracket-activated event)
   useEffect(function() {
     function onActivated() { setState(loadInitialState()); }
-    window.addEventListener('bilpos:bracket-activated', onActivated);
-    return function() { window.removeEventListener('bilpos:bracket-activated', onActivated); };
+    window.addEventListener('RNR INTAN:bracket-activated', onActivated);
+    return function() { window.removeEventListener('RNR INTAN:bracket-activated', onActivated); };
   }, []);
 
   var saveState = useCallback(function(newBracket, newLiveMatchId) {
@@ -908,7 +908,7 @@ export default function BracketPage() {
   if (!state.bracket || !state.bracket.rounds || state.bracket.rounds.length === 0) {
     return (
       <div className="bracket-empty">
-        <div className="bracket-empty-icon">🏆</div>
+        <div className="bracket-empty-icon">ðŸ†</div>
         <p>Setup tournament terlebih dahulu dan tambahkan peserta di menu Tournament Setup.</p>
       </div>
     );
@@ -933,9 +933,9 @@ export default function BracketPage() {
 npm run build
 ```
 
-Expected: exits 0. There will be a compile error "Cannot find module './BracketView'" — that is expected and confirms the import is wired correctly. The build is expected to fail at this step because BracketView does not exist yet. Ignore the error and proceed.
+Expected: exits 0. There will be a compile error "Cannot find module './BracketView'" â€” that is expected and confirms the import is wired correctly. The build is expected to fail at this step because BracketView does not exist yet. Ignore the error and proceed.
 
-**Actual expected result for step 2:** Build will ERROR because `BracketView` does not exist yet. This is acceptable — Task 5 creates it.
+**Actual expected result for step 2:** Build will ERROR because `BracketView` does not exist yet. This is acceptable â€” Task 5 creates it.
 
 - [ ] **Step 3: Commit**
 
@@ -955,7 +955,7 @@ git commit -m "feat: add BracketPage state owner with score, live, participant h
 **Interfaces:**
 - Consumes from Task 4: `bracket`, `participants`, `liveMatchId`, `onScoreChange`, `onSelectParticipant`, `onToggleLive`
 - Consumes from Task 2: `computeMatchMargins(roundIdx, matchIdx)`, `computeConnectorHeight(roundIdx)`
-- Produces: renders `.bracket-view` → `.round-column[]` → `.match-wrapper[]` with correct margin + `--connector-h` CSS var + connector classes; renders `<MatchCard>` per match
+- Produces: renders `.bracket-view` â†’ `.round-column[]` â†’ `.match-wrapper[]` with correct margin + `--connector-h` CSS var + connector classes; renders `<MatchCard>` per match
 
 - [ ] **Step 1: Create `src/components/BracketView.jsx`**
 
@@ -1091,7 +1091,7 @@ export default function RoundColumn({
 npm run build
 ```
 
-Expected: exits 0 (or fails only because `MatchCard` does not exist yet — acceptable, same as Task 4 Step 2).
+Expected: exits 0 (or fails only because `MatchCard` does not exist yet â€” acceptable, same as Task 4 Step 2).
 
 - [ ] **Step 4: Commit**
 
@@ -1127,7 +1127,7 @@ export default function ScoreInput({ value, onChange, disabled }) {
       min="0"
       max="999"
       value={value === null || value === undefined ? '' : value}
-      placeholder="—"
+      placeholder="â€”"
       disabled={disabled}
       onChange={function(e) { onChange(e.target.value); }}
     />
@@ -1164,7 +1164,7 @@ export default function ParticipantSlot({
         value={currentId}
         onChange={function(e) { onSelect(e.target.value || null); }}
       >
-        <option value="">— Pilih Peserta —</option>
+        <option value="">â€” Pilih Peserta â€”</option>
         {available.map(function(p) {
           return (
             <option key={p.id} value={String(p.id)}>
@@ -1218,7 +1218,7 @@ export default function MatchCard({
           disabled={isByeMatch}
           title={isLive ? 'Nonaktifkan LIVE' : 'Tandai sebagai LIVE'}
         >
-          {isLive ? '🔴 LIVE' : 'LIVE'}
+          {isLive ? 'ðŸ”´ LIVE' : 'LIVE'}
         </button>
       </div>
 
@@ -1272,7 +1272,7 @@ export default function MatchCard({
 }
 ```
 
-- [ ] **Step 4: Run the build — expect success this time**
+- [ ] **Step 4: Run the build â€” expect success this time**
 
 ```
 npm run build
@@ -1339,7 +1339,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var navItem = document.querySelector('.sidebar-nav-item[data-section="bracket"]');
   if (navItem) {
     navItem.addEventListener('click', function() {
-      window.dispatchEvent(new CustomEvent('bilpos:bracket-activated'));
+      window.dispatchEvent(new CustomEvent('RNR INTAN:bracket-activated'));
     });
   }
 });
@@ -1374,9 +1374,9 @@ async function setupBracket(page, size) {
         status: '',
       });
     }
-    localStorage.setItem('bilpos_tournament', JSON.stringify({ size: sz, status: 'setup', currentRound: 0 }));
-    localStorage.setItem('bilpos_participants', JSON.stringify(participants));
-    localStorage.removeItem('bilpos_bracket');
+    localStorage.setItem('RNR INTAN_tournament', JSON.stringify({ size: sz, status: 'setup', currentRound: 0 }));
+    localStorage.setItem('RNR INTAN_participants', JSON.stringify(participants));
+    localStorage.removeItem('RNR INTAN_bracket');
   }, size);
   await page.reload();
 }
@@ -1422,7 +1422,7 @@ test.describe('React Bracket Module', () => {
     await page.click('[data-section="bracket"]');
     await page.waitForSelector('.participant-select', { timeout: 8000 });
     const selectCount = await page.locator('.participant-select').count();
-    // 8 matches × 2 slots = 16 dropdowns in round 1
+    // 8 matches Ã— 2 slots = 16 dropdowns in round 1
     expect(selectCount).toBeGreaterThanOrEqual(16);
   });
 
@@ -1578,7 +1578,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 | Round 1 participant dropdowns with HC display | Task 6 (ParticipantSlot), Task 2 (getParticipantLabel) |
 | Duplicate prevention in Round 1 | Task 5 (usedInRound1 set in BracketView), Task 6 (ParticipantSlot filters) |
 | Manual score input beside each participant | Task 6 (ScoreInput beside ParticipantSlot in MatchCard) |
-| Automatic winner advancement | Task 4 (handleScoreChange → BilposTournament.advanceWinner) |
+| Automatic winner advancement | Task 4 (handleScoreChange â†’ BilposTournament.advanceWinner) |
 | Score change recalculates winner | Task 4 (resolveWinner called on every score change) |
 | Cascade clear on winner change | Task 4 (cascadeClearWinnerMut) |
 | LIVE button per match | Task 6 (MatchCard live-btn) |
@@ -1589,6 +1589,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 | Winner highlight + loser dim | Task 3 (winner-slot border-left green, loser-slot opacity 0.6) |
 | Preserve bracket state after refresh | Task 4 (loadInitialState reads BilposStorage.loadBracket on mount) |
 | Sync state to localStorage | Task 4 (saveState called in every handler) |
-| Modular components | Tasks 4–6 (7 focused files) |
+| Modular components | Tasks 4â€“6 (7 focused files) |
 | BYE auto-advance | Task 4 (BilposTournament.autoAdvanceByes after generateBracket) |
 | Light theme support | Task 3 ([data-theme='light'] overrides) |
+

@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var TOAST_ICONS = {
     success: 'fa-check-circle',
     danger: 'fa-times-circle',
@@ -80,7 +80,7 @@
       }
 
       toast = document.createElement('div');
-      toast.className = 'bilpos-toast toast-' + toastType;
+      toast.className = 'RNR INTAN-toast toast-' + toastType;
 
       icon = document.createElement('i');
       icon.className = 'fa ' + TOAST_ICONS[toastType];
@@ -176,13 +176,13 @@
         this.animateCounter(getElement(ids[index]), numericMap[ids[index]], 600);
       }
 
-      safeText(getElement('stat-venue-text'), tournament.venue || '—');
+      safeText(getElement('stat-venue-text'), tournament.venue || 'â€”');
     },
 
     updateHeader: function (tournament) {
       tournament = tournament || {};
 
-      safeText(getElement('header-venue'), tournament.venue || 'BILLIARD POSITIF');
+      safeText(getElement('header-venue'), tournament.venue || 'RNR Billiard');
       safeText(getElement('header-status'), STATUS_LABELS[tournament.status] || STATUS_LABELS.setup);
       safeText(
         getElement('header-round'),
@@ -192,9 +192,9 @@
 
     emptyState: function (type) {
       var states = {
-        participants: '<div class="empty-state"><div class="empty-icon">🎱</div><h5>Belum Ada Peserta</h5><p>Setup tournament terlebih dahulu dan mulai mendaftarkan peserta.</p></div>',
-        bracket: '<div class="empty-state"><div class="empty-icon">🏆</div><h5>Bracket Belum Dibuat</h5><p>Tambahkan peserta, lakukan drawing, kemudian bracket akan otomatis terbuat.</p></div>',
-        drawing: '<div class="empty-state"><div class="empty-icon">🎲</div><h5>Drawing Belum Dilakukan</h5><p>Klik tombol DRAW pada setiap peserta untuk menentukan nomor slot.</p></div>'
+        participants: '<div class="empty-state"><div class="empty-icon">ðŸŽ±</div><h5>Belum Ada Peserta</h5><p>Setup tournament terlebih dahulu dan mulai mendaftarkan peserta.</p></div>',
+        bracket: '<div class="empty-state"><div class="empty-icon">ðŸ†</div><h5>Bracket Belum Dibuat</h5><p>Tambahkan peserta, lakukan drawing, kemudian bracket akan otomatis terbuat.</p></div>',
+        drawing: '<div class="empty-state"><div class="empty-icon">ðŸŽ²</div><h5>Drawing Belum Dilakukan</h5><p>Klik tombol DRAW pada setiap peserta untuk menentukan nomor slot.</p></div>'
       };
 
       return states[type] || '';
@@ -338,3 +338,4 @@
     window.BilposUI = BilposUI;
   }
 })();
+

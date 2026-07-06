@@ -1,4 +1,4 @@
-const test = require('node:test');
+﻿const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -18,9 +18,9 @@ test('index.html provides the Bilpos SPA shell and required asset loading', () =
     '<html lang="id">',
     '<meta charset="UTF-8"/>',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0"/>',
-    '<meta name="description" content="BILPOS - Professional Billiard Tournament Management System by Billiard Positif"/>',
+    '<meta name="description" content="RNR INTAN - Professional Billiard Tournament Management System by RNR Billiard"/>',
     '<meta name="theme-color" content="#0A0A0A"/>',
-    '<title>BILPOS — Billiard Positif Tournament System</title>',
+    '<title>BILPOS â€” RNR Billiard Tournament System</title>',
     '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">',
     '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">',
     '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">',
@@ -45,7 +45,7 @@ test('index.html includes all required sections, nav items, and DOM ids', () => 
 
   [
     'id="toast-container"',
-    'id="bilpos-sidebar"',
+    'id="RNR INTAN-sidebar"',
     'id="sidebar-overlay"',
     'id="hamburger-btn"',
     'id="header-venue"',
@@ -67,8 +67,8 @@ test('index.html includes all required sections, nav items, and DOM ids', () => 
     'id="section-statistics"',
     'id="section-export"',
     'id="section-settings"',
-    'class="bilpos-section active"',
-    'class="bilpos-section"',
+    'class="RNR INTAN-section active"',
+    'class="RNR INTAN-section"',
     'data-section="dashboard"',
     'data-section="setup"',
     'data-section="participants"',
@@ -121,3 +121,4 @@ test('index.html includes all required sections, nav items, and DOM ids', () => 
     assert.match(source, new RegExp(snippet.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   });
 });
+

@@ -1,4 +1,4 @@
-# Bracket Size Sync Fix Implementation Plan
+﻿# Bracket Size Sync Fix Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Tidak boleh mengubah `BracketPage.jsx`, `bracketUtils.js`, `tournament.js`, atau `storage.js`
-- Harus backward compatible — guard `dispatchEvent` agar tidak throw jika tidak tersedia
+- Harus backward compatible â€” guard `dispatchEvent` agar tidak throw jika tidak tersedia
 - Ikuti code style `app.js` yang sudah ada: `var`, function expressions, `typeof` guards
 - Test menggunakan `node:test` dan `node:assert/strict` (NO jest, NO mocha)
 - Test command: `node --test tests/app-events.test.js`
@@ -34,7 +34,7 @@
 - Test: `tests/app-events.test.js`
 
 **Interfaces:**
-- Produces: `window.dispatchEvent` dipanggil dengan event bertipe `'bilpos:bracket-activated'` setiap kali `input-size` di-change
+- Produces: `window.dispatchEvent` dipanggil dengan event bertipe `'RNR INTAN:bracket-activated'` setiap kali `input-size` di-change
 
 ---
 
@@ -160,7 +160,7 @@ test('size change dispatches bilpos:bracket-activated event', () => {
   sizeInput.dispatchEvent('change', { target: sizeInput });
 
   assert.ok(
-    loaded.dispatchedEvents.includes('bilpos:bracket-activated'),
+    loaded.dispatchedEvents.includes('RNR INTAN:bracket-activated'),
     'Expected bilpos:bracket-activated to be dispatched when size changes'
   );
 });
@@ -174,7 +174,7 @@ node --test tests/app-events.test.js
 
 Expected: Test baru FAIL dengan pesan `Expected bilpos:bracket-activated to be dispatched when size changes`
 
-- [ ] **Step 4: Implementasi — tambah helper function dan dispatch di `input-size` handler**
+- [ ] **Step 4: Implementasi â€” tambah helper function dan dispatch di `input-size` handler**
 
 Di `assets/js/app.js`, tambahkan helper `dispatchBracketActivated` di dalam IIFE (setelah `getElement` function, sekitar baris 16), dan dispatch di handler `input-size`:
 
@@ -184,8 +184,8 @@ Di `assets/js/app.js`, tambahkan helper `dispatchBracketActivated` di dalam IIFE
   function dispatchBracketActivated() {
     if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       var event = typeof CustomEvent === 'function'
-        ? new CustomEvent('bilpos:bracket-activated')
-        : { type: 'bilpos:bracket-activated' };
+        ? new CustomEvent('RNR INTAN:bracket-activated')
+        : { type: 'RNR INTAN:bracket-activated' };
       window.dispatchEvent(event);
     }
   }
@@ -213,9 +213,9 @@ Di `assets/js/app.js`, tambahkan helper `dispatchBracketActivated` di dalam IIFE
 node --test tests/app-events.test.js
 ```
 
-Expected output (test baru PASS — test lama mungkin masih fail karena pre-existing issues):
+Expected output (test baru PASS â€” test lama mungkin masih fail karena pre-existing issues):
 ```
-✔ size change dispatches bilpos:bracket-activated event
+âœ” size change dispatches bilpos:bracket-activated event
 ```
 
 - [ ] **Step 6: Commit**
@@ -235,7 +235,7 @@ git commit -m "fix: dispatch bilpos:bracket-activated when tournament size chang
 
 **Interfaces:**
 - Consumes: helper `dispatchBracketActivated()` dari Task 1
-- Produces: `window.dispatchEvent` dipanggil dengan event `'bilpos:bracket-activated'` ketika nav item dengan `data-section="bracket"` diklik
+- Produces: `window.dispatchEvent` dipanggil dengan event `'RNR INTAN:bracket-activated'` ketika nav item dengan `data-section="bracket"` diklik
 
 ---
 
@@ -265,7 +265,7 @@ test('clicking bracket nav item dispatches bilpos:bracket-activated event', () =
   bracketNavItem.dispatchEvent('click', {});
 
   assert.ok(
-    loaded.dispatchedEvents.includes('bilpos:bracket-activated'),
+    loaded.dispatchedEvents.includes('RNR INTAN:bracket-activated'),
     'Expected bilpos:bracket-activated to be dispatched when bracket nav is clicked'
   );
 });
@@ -279,7 +279,7 @@ node --test tests/app-events.test.js
 
 Expected: Test baru FAIL dengan pesan `Expected bilpos:bracket-activated to be dispatched when bracket nav is clicked`
 
-- [ ] **Step 3: Implementasi — tambah dispatch di sidebar-nav click handler**
+- [ ] **Step 3: Implementasi â€” tambah dispatch di sidebar-nav click handler**
 
 Di `assets/js/app.js`, ubah blok `sidebar-nav-item` click handler (baris 237-246):
 
@@ -305,8 +305,8 @@ node --test tests/app-events.test.js
 
 Expected output (kedua test baru PASS):
 ```
-✔ size change dispatches bilpos:bracket-activated event
-✔ clicking bracket nav item dispatches bilpos:bracket-activated event
+âœ” size change dispatches bilpos:bracket-activated event
+âœ” clicking bracket nav item dispatches bilpos:bracket-activated event
 ```
 
 - [ ] **Step 5: Jalankan semua unit test untuk pastikan tidak ada regresi baru**
@@ -323,3 +323,4 @@ Expected: `pass 1, fail 0` (sama seperti baseline)
 git add assets/js/app.js tests/app-events.test.js
 git commit -m "fix: dispatch bilpos:bracket-activated when bracket nav tab is clicked"
 ```
+

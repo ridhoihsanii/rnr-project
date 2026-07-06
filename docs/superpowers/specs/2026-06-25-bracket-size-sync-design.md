@@ -1,4 +1,4 @@
-# Design: Bracket Auto-Update Berdasarkan Ukuran Tournament
+﻿# Design: Bracket Auto-Update Berdasarkan Ukuran Tournament
 
 **Date:** 2026-06-25  
 **Status:** Approved
@@ -7,9 +7,9 @@
 
 Bracket tournament tidak langsung terupdate ketika ukuran tournament (size) diubah. Ada dua bug terkait:
 
-1. **Bug #1 — `storage` event tidak menyala di tab sama**: `BracketPage.jsx` mendengarkan `window.addEventListener('storage', ...)` untuk mendeteksi perubahan `bilpos_tournament`. Namun Web Storage API hanya mengirim event ini ke tab/window **lain**, bukan di tab yang sama tempat `localStorage.setItem()` dipanggil.
+1. **Bug #1 â€” `storage` event tidak menyala di tab sama**: `BracketPage.jsx` mendengarkan `window.addEventListener('storage', ...)` untuk mendeteksi perubahan `bilpos_tournament`. Namun Web Storage API hanya mengirim event ini ke tab/window **lain**, bukan di tab yang sama tempat `localStorage.setItem()` dipanggil.
 
-2. **Bug #2 — `bilpos:bracket-activated` tidak pernah di-dispatch**: `BracketPage.jsx` juga mendengarkan event `bilpos:bracket-activated` untuk reload state ketika tab Bracket diklik. Namun di `app.js`, klik sidebar nav hanya melakukan scroll ke section — event ini tidak pernah di-dispatch.
+2. **Bug #2 â€” `bilpos:bracket-activated` tidak pernah di-dispatch**: `BracketPage.jsx` juga mendengarkan event `bilpos:bracket-activated` untuk reload state ketika tab Bracket diklik. Namun di `app.js`, klik sidebar nav hanya melakukan scroll ke section â€” event ini tidak pernah di-dispatch.
 
 ## Root Cause
 
@@ -24,27 +24,27 @@ Bracket tournament tidak langsung terupdate ketika ukuran tournament (size) diub
 
 ### File: `assets/js/app.js`
 
-**Change 1** — Saat nav "Bracket" diklik, dispatch `bilpos:bracket-activated`:
+**Change 1** â€” Saat nav "Bracket" diklik, dispatch `bilpos:bracket-activated`:
 
 ```js
 // Dalam sidebar-nav-item click handler (baris ~238-244)
 if (section === 'bracket') {
-  window.dispatchEvent(new CustomEvent('bilpos:bracket-activated'));
+  window.dispatchEvent(new CustomEvent('RNR INTAN:bracket-activated'));
 }
 ```
 
-**Change 2** — Saat `input-size` berubah, dispatch `bilpos:bracket-activated` setelah save:
+**Change 2** â€” Saat `input-size` berubah, dispatch `bilpos:bracket-activated` setelah save:
 
 ```js
 // Dalam inputSize change handler (baris ~260-266)
-window.dispatchEvent(new CustomEvent('bilpos:bracket-activated'));
+window.dispatchEvent(new CustomEvent('RNR INTAN:bracket-activated'));
 ```
 
 ## How It Works After Fix
 
-1. User ubah ukuran tournament di "Tournament Setup" → `saveTournament()` dipanggil → `bilpos:bracket-activated` di-dispatch → `BracketPage` re-read storage → `loadInitialState()` mendeteksi `size` berbeda → bracket baru di-generate.
+1. User ubah ukuran tournament di "Tournament Setup" â†’ `saveTournament()` dipanggil â†’ `bilpos:bracket-activated` di-dispatch â†’ `BracketPage` re-read storage â†’ `loadInitialState()` mendeteksi `size` berbeda â†’ bracket baru di-generate.
 
-2. User klik tab "Bracket" → `bilpos:bracket-activated` di-dispatch → bracket reload dari storage terbaru.
+2. User klik tab "Bracket" â†’ `bilpos:bracket-activated` di-dispatch â†’ bracket reload dari storage terbaru.
 
 ## No Changes Needed
 
@@ -53,5 +53,6 @@ window.dispatchEvent(new CustomEvent('bilpos:bracket-activated'));
 
 ## Testing
 
-- Ubah ukuran tournament dari 32 ke 16 → bracket harus langsung menampilkan 8 match di round pertama.
-- Refresh atau navigasi ke tab lain lalu kembali ke Bracket → bracket harus tetap sinkron dengan ukuran terbaru.
+- Ubah ukuran tournament dari 32 ke 16 â†’ bracket harus langsung menampilkan 8 match di round pertama.
+- Refresh atau navigasi ke tab lain lalu kembali ke Bracket â†’ bracket harus tetap sinkron dengan ukuran terbaru.
+

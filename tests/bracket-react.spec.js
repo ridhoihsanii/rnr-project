@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+﻿const { test, expect } = require('@playwright/test');
 
 // Helper: set up localStorage with N participants and a given tournament size,
 // then reload the page. The server must be running at http://127.0.0.1:8080.
@@ -16,9 +16,9 @@ async function setupBracket(page, size) {
         status: '',
       });
     }
-    localStorage.setItem('bilpos_tournament', JSON.stringify({ size: sz, status: 'setup', currentRound: 0 }));
-    localStorage.setItem('bilpos_participants', JSON.stringify(participants));
-    localStorage.removeItem('bilpos_bracket');
+    localStorage.setItem('RNR INTAN_tournament', JSON.stringify({ size: sz, status: 'setup', currentRound: 0 }));
+    localStorage.setItem('RNR INTAN_participants', JSON.stringify(participants));
+    localStorage.removeItem('RNR INTAN_bracket');
   }, size);
   await page.reload();
 }
@@ -64,7 +64,7 @@ test.describe('React Bracket Module', () => {
     await page.click('[data-section="bracket"]');
     await page.waitForSelector('.participant-select', { timeout: 8000 });
     const selectCount = await page.locator('.participant-select').count();
-    // 8 matches × 2 slots = 16 dropdowns in round 1
+    // 8 matches Ã— 2 slots = 16 dropdowns in round 1
     expect(selectCount).toBeGreaterThanOrEqual(16);
   });
 
@@ -157,9 +157,9 @@ test.describe('React Bracket Module', () => {
     await page.goto('/index.html');
     await page.evaluate(function() {
       // size: 1 causes generateBracket to return empty rounds, triggering the empty state
-      localStorage.setItem('bilpos_tournament', JSON.stringify({ size: 1 }));
-      localStorage.removeItem('bilpos_participants');
-      localStorage.removeItem('bilpos_bracket');
+      localStorage.setItem('RNR INTAN_tournament', JSON.stringify({ size: 1 }));
+      localStorage.removeItem('RNR INTAN_participants');
+      localStorage.removeItem('RNR INTAN_bracket');
     });
     await page.reload();
     await page.click('[data-section="bracket"]');
@@ -172,7 +172,7 @@ test.describe('React Bracket Module', () => {
     await page.waitForSelector('.score-input', { timeout: 8000 });
 
     // First match already has Player 1 (p1) and Player 2 (p2) from generateBracket.
-    // Enter scores: Player 1 = 7, Player 2 = 3 → Player 1 wins.
+    // Enter scores: Player 1 = 7, Player 2 = 3 â†’ Player 1 wins.
     const inputs = page.locator('.score-input');
     await inputs.nth(0).fill('7');
     await inputs.nth(1).fill('3');
@@ -186,3 +186,4 @@ test.describe('React Bracket Module', () => {
     expect(text).toContain('Player 1');
   });
 });
+

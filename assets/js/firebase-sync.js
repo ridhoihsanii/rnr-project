@@ -1,22 +1,22 @@
-/* firebase-sync.js
+﻿/* firebase-sync.js
  * Menyimpan bracket ke Firebase RTDB sehingga URL preview menjadi pendek
  * (preview.html?id=<shortId>) dan real-time di semua perangkat.
  */
 (function () {
   var FIREBASE_CONFIG = {
     apiKey:            'AIzaSyA6h6oCHrKixtZMEyqufpaZsaBrdrtBL1Y',
-    authDomain:        'bilpos-tournament.firebaseapp.com',
+    authDomain:        'RNR INTAN-tournament.firebaseapp.com',
     databaseURL:       'https://bilpos-tournament-default-rtdb.firebaseio.com',
-    projectId:         'bilpos-tournament',
-    storageBucket:     'bilpos-tournament.firebasestorage.app',
+    projectId:         'RNR INTAN-tournament',
+    storageBucket:     'RNR INTAN-tournament.firebasestorage.app',
     messagingSenderId: '1016029844462',
     appId:             '1:1016029844462:web:159e221b47c584eed0b4ff'
   };
 
-  var PREVIEW_ID_KEY = 'bilpos_preview_id';
+  var PREVIEW_ID_KEY = 'RNR INTAN_preview_id';
   var db = null;
 
-  /* ── ID pendek unik per-browser (8-10 karakter) ─────────────────── */
+  /* â”€â”€ ID pendek unik per-browser (8-10 karakter) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function getOrCreatePreviewId() {
     var id = localStorage.getItem(PREVIEW_ID_KEY);
     if (!id) {
@@ -26,7 +26,7 @@
     return id;
   }
 
-  /* ── URL preview pendek ─────────────────────────────────────────── */
+  /* â”€â”€ URL preview pendek â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function getPreviewUrl(id) {
     var href = window.location.href;
     var base = href.split('?')[0].split('#')[0];
@@ -34,7 +34,7 @@
     return base + '/preview.html?id=' + id;
   }
 
-  /* ── Inisialisasi Firebase (idempotent) ─────────────────────────── */
+  /* â”€â”€ Inisialisasi Firebase (idempotent) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function initFirebase() {
     if (typeof firebase === 'undefined') return false;
     try {
@@ -49,7 +49,7 @@
     }
   }
 
-  /* ── Simpan ke Firebase, buka tab preview ───────────────────────── */
+  /* â”€â”€ Simpan ke Firebase, buka tab preview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function openPreview(payloadObj) {
     var id  = getOrCreatePreviewId();
     var url = getPreviewUrl(id);
@@ -73,7 +73,7 @@
     });
   }
 
-  /* ── Auto-sync saat bracket disimpan (setelah preview dibuka ≥1x) ─ */
+  /* â”€â”€ Auto-sync saat bracket disimpan (setelah preview dibuka â‰¥1x) â”€ */
   function hookSaveBracket() {
     if (!window.BilposStorage || typeof BilposStorage.saveBracket !== 'function') return;
     var original = BilposStorage.saveBracket.bind(BilposStorage);
@@ -93,7 +93,7 @@
     };
   }
 
-  /* ── Expose API ─────────────────────────────────────────────────── */
+  /* â”€â”€ Expose API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   window.BilposFirebase = {
     init:              initFirebase,
     openPreview:       openPreview,
@@ -115,3 +115,4 @@
     });
   }
 })();
+

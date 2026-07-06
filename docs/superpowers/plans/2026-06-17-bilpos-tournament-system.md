@@ -1,4 +1,4 @@
-# BILPOS Tournament Management System — Implementation Plan
+﻿# RNR INTAN Tournament Management System â€” Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -6,7 +6,7 @@
 
 **Architecture:** Pure frontend SPA using HTML5 + CSS3 + Vanilla JavaScript ES6. LocalStorage serves as the persistence layer. All modules communicate via a shared state object and custom events. The bracket engine uses DOM + CSS for rendering, with SVG connectors for the Challonge-style visualization.
 
-**Tech Stack:** HTML5, CSS3, Bootstrap 5.3, Font Awesome 6, Poppins (Google Fonts), SheetJS (xlsx), html2canvas, jsPDF — all via CDN.
+**Tech Stack:** HTML5, CSS3, Bootstrap 5.3, Font Awesome 6, Poppins (Google Fonts), SheetJS (xlsx), html2canvas, jsPDF â€” all via CDN.
 
 ---
 
@@ -26,7 +26,7 @@
 
 ---
 
-## Task 1: Project Shell — index.html
+## Task 1: Project Shell â€” index.html
 
 **Files:**
 - Create: `index.html`
@@ -34,11 +34,11 @@
 - [ ] Create `index.html` with full HTML5 shell including:
   - All CDN imports (Bootstrap 5.3, Font Awesome 6, Google Fonts Poppins, SheetJS, html2canvas, jsPDF)
   - `<meta>` viewport, charset, OG tags
-  - Fixed top header with BILLIARD POSITIF branding + trophy icon + status indicators
+  - Fixed top header with RNR Billiard branding + trophy icon + status indicators
   - Left sidebar with nav links: Dashboard, Tournament Setup, Participant List, Tournament Bracket, Statistics, Export/Import, Settings
   - Mobile sidebar overlay + hamburger toggle
   - Main content area with all 7 section panels (hidden by default, shown via JS)
-  - Premium footer: "Built with ❤️ by Ihsan"
+  - Premium footer: "Built with â¤ï¸ by Ihsan"
   - Script tags loading all JS files in correct order
 
 ```html
@@ -47,7 +47,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BILPOS — Billiard Positif Tournament System</title>
+  <title>BILPOS â€” RNR Billiard Tournament System</title>
   <!-- all CDN links -->
   <link rel="stylesheet" href="assets/css/style.css"/>
 </head>
@@ -62,7 +62,7 @@
 
 ---
 
-## Task 2: Design System — style.css
+## Task 2: Design System â€” style.css
 
 **Files:**
 - Create: `assets/css/style.css`
@@ -115,7 +115,7 @@
 
 ---
 
-## Task 3: LocalStorage Layer — storage.js
+## Task 3: LocalStorage Layer â€” storage.js
 
 **Files:**
 - Create: `assets/js/storage.js`
@@ -125,11 +125,11 @@
 ```javascript
 const BilposStorage = {
   KEYS: {
-    TOURNAMENT: 'bilpos_tournament',
-    PARTICIPANTS: 'bilpos_participants',
-    BRACKET: 'bilpos_bracket',
-    SETTINGS: 'bilpos_settings',
-    HISTORY: 'bilpos_history'
+    TOURNAMENT: 'RNR INTAN_tournament',
+    PARTICIPANTS: 'RNR INTAN_participants',
+    BRACKET: 'RNR INTAN_bracket',
+    SETTINGS: 'RNR INTAN_settings',
+    HISTORY: 'RNR INTAN_history'
   },
 
   // Tournament setup
@@ -165,7 +165,7 @@ const BilposStorage = {
 
 ---
 
-## Task 4: Drawing System — drawing.js
+## Task 4: Drawing System â€” drawing.js
 
 **Files:**
 - Create: `assets/js/drawing.js`
@@ -217,7 +217,7 @@ const BilposDrawing = {
 
 ---
 
-## Task 5: Tournament Logic — tournament.js
+## Task 5: Tournament Logic â€” tournament.js
 
 **Files:**
 - Create: `assets/js/tournament.js`
@@ -273,7 +273,7 @@ const BilposTournament = {
   // Advance winner to next round
   advanceWinner(bracket, roundIdx, matchIdx, winner) {
     const nextRound = bracket.rounds[roundIdx + 1];
-    if (!nextRound) return bracket; // final — no next round
+    if (!nextRound) return bracket; // final â€” no next round
     const nextMatchIdx = Math.floor(matchIdx / 2);
     const slot = matchIdx % 2 === 0 ? 'p1' : 'p2';
     nextRound[nextMatchIdx][slot] = winner;
@@ -320,7 +320,7 @@ const BilposTournament = {
 
 ---
 
-## Task 6: Bracket Renderer — bracket.js
+## Task 6: Bracket Renderer â€” bracket.js
 
 **Files:**
 - Create: `assets/js/bracket.js`
@@ -407,8 +407,8 @@ const BilposBracket = {
       <div class="match-actions">
         ${match.status !== 'done' ? `<button class="btn-playing ${match.status === 'live' ? 'active' : ''}"
           data-round="${rIdx}" data-match="${mIdx}">
-          ${match.status === 'live' ? '<span class="live-dot"></span> LIVE' : '▶ PLAYING'}
-        </button>` : '<span class="match-done-badge">✓ SELESAI</span>'}
+          ${match.status === 'live' ? '<span class="live-dot"></span> LIVE' : 'â–¶ PLAYING'}
+        </button>` : '<span class="match-done-badge">âœ“ SELESAI</span>'}
       </div>
     `;
     return card;
@@ -480,7 +480,7 @@ const BilposBracket = {
 
 ---
 
-## Task 7: UI Helpers — ui.js
+## Task 7: UI Helpers â€” ui.js
 
 **Files:**
 - Create: `assets/js/ui.js`
@@ -533,19 +533,19 @@ const BilposUI = {
       if (el && val !== null) this.animateCounter(el, val);
     });
     const venueEl = document.getElementById('stat-venue-text');
-    if (venueEl) venueEl.textContent = tournament.venue || '—';
+    if (venueEl) venueEl.textContent = tournament.venue || 'â€”';
     const roundEl = document.getElementById('header-round');
     if (roundEl) roundEl.textContent = tournament.currentRound ? `Round ${tournament.currentRound}` : 'Setup';
     const venueHeader = document.getElementById('header-venue');
-    if (venueHeader) venueHeader.textContent = tournament.venue || 'BILLIARD POSITIF';
+    if (venueHeader) venueHeader.textContent = tournament.venue || 'RNR Billiard';
   },
 
   // Empty states
   emptyState(type) {
     const states = {
-      participants: `<div class="empty-state"><div class="empty-icon">🎱</div><p>Belum ada peserta.<br>Setup tournament terlebih dahulu.</p></div>`,
-      bracket: `<div class="empty-state"><div class="empty-icon">🏆</div><p>Bracket belum dibuat.<br>Tambahkan peserta & mulai drawing.</p></div>`,
-      drawing: `<div class="empty-state"><div class="empty-icon">🎲</div><p>Drawing belum dilakukan.</p></div>`
+      participants: `<div class="empty-state"><div class="empty-icon">ðŸŽ±</div><p>Belum ada peserta.<br>Setup tournament terlebih dahulu.</p></div>`,
+      bracket: `<div class="empty-state"><div class="empty-icon">ðŸ†</div><p>Bracket belum dibuat.<br>Tambahkan peserta & mulai drawing.</p></div>`,
+      drawing: `<div class="empty-state"><div class="empty-icon">ðŸŽ²</div><p>Drawing belum dilakukan.</p></div>`
     };
     return states[type] || '';
   },
@@ -570,7 +570,7 @@ const BilposUI = {
 
 ---
 
-## Task 8: Main Application — app.js
+## Task 8: Main Application â€” app.js
 
 **Files:**
 - Create: `assets/js/app.js`
@@ -659,16 +659,17 @@ document.addEventListener('DOMContentLoaded', () => BilposApp.init());
 
 ## Self-Review Checklist
 
-- [x] Spec: 100% frontend, no backend → all files are static
-- [x] Spec: LocalStorage persistence → storage.js covers all keys
-- [x] Spec: Challonge-style bracket → bracket.js renders horizontal rounds with SVG connectors
-- [x] Spec: Bilpos Yellow/Black branding → CSS variables defined, dominant palette
-- [x] Spec: 16/32/48/64/96/128 player support → bracket generation handles byes for non-power-of-2
-- [x] Spec: Drawing system with multi-entry quadrant distribution → drawing.js
-- [x] Spec: Two-way data binding → app.js events sync table ↔ bracket
-- [x] Spec: Export JSON/Excel/PDF + Import → app.js export methods
-- [x] Spec: Footer "Built with ❤️ by Ihsan" → index.html footer section
-- [x] Spec: Animated counters, toasts, animations → ui.js + style.css keyframes
-- [x] Spec: Empty states → ui.js emptyState()
-- [x] Spec: Settings, Statistics, Dashboard sections → all panels in index.html
+- [x] Spec: 100% frontend, no backend â†’ all files are static
+- [x] Spec: LocalStorage persistence â†’ storage.js covers all keys
+- [x] Spec: Challonge-style bracket â†’ bracket.js renders horizontal rounds with SVG connectors
+- [x] Spec: Bilpos Yellow/Black branding â†’ CSS variables defined, dominant palette
+- [x] Spec: 16/32/48/64/96/128 player support â†’ bracket generation handles byes for non-power-of-2
+- [x] Spec: Drawing system with multi-entry quadrant distribution â†’ drawing.js
+- [x] Spec: Two-way data binding â†’ app.js events sync table â†” bracket
+- [x] Spec: Export JSON/Excel/PDF + Import â†’ app.js export methods
+- [x] Spec: Footer "Built with â¤ï¸ by Ihsan" â†’ index.html footer section
+- [x] Spec: Animated counters, toasts, animations â†’ ui.js + style.css keyframes
+- [x] Spec: Empty states â†’ ui.js emptyState()
+- [x] Spec: Settings, Statistics, Dashboard sections â†’ all panels in index.html
 - [x] No placeholders: All tasks include actual implementation code
+

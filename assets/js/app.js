@@ -18,8 +18,8 @@
   function dispatchBracketActivated() {
     if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       var event = typeof CustomEvent === 'function'
-        ? new CustomEvent('bilpos:bracket-activated')
-        : { type: 'bilpos:bracket-activated' };
+        ? new CustomEvent('RNR INTAN:bracket-activated')
+        : { type: 'RNR INTAN:bracket-activated' };
       window.dispatchEvent(event);
     }
   }
@@ -27,8 +27,8 @@
   function dispatchParticipantsUpdated() {
     if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       var event = typeof CustomEvent === 'function'
-        ? new CustomEvent('bilpos:participants-updated')
-        : { type: 'bilpos:participants-updated' };
+        ? new CustomEvent('RNR INTAN:participants-updated')
+        : { type: 'RNR INTAN:participants-updated' };
       window.dispatchEvent(event);
     }
   }
@@ -504,7 +504,7 @@
           try {
             var key = evt.key;
             if (!key) return;
-            var interesting = ['bilpos_participants', 'bilpos_tournament', 'bilpos_settings'];
+            var interesting = ['RNR INTAN_participants', 'RNR INTAN_tournament', 'RNR INTAN_settings'];
             if (interesting.indexOf(key) === -1) return;
             try { self.tournament = BilposStorage.loadTournament(); } catch (e) {}
             try { self.participants = BilposStorage.loadParticipants(); } catch (e) {}
@@ -658,7 +658,7 @@
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url;
-      a.download = 'bilpos-tournament-' + new Date().toISOString().slice(0, 10) + '.json';
+      a.download = 'RNR INTAN-tournament-' + new Date().toISOString().slice(0, 10) + '.json';
       a.click();
       URL.revokeObjectURL(url);
       BilposUI.showToast('Data berhasil diekspor!', 'success');
@@ -698,7 +698,7 @@
       var wb = XLSX.utils.book_new();
       var ws = XLSX.utils.json_to_sheet(rows);
       XLSX.utils.book_append_sheet(wb, ws, 'Peserta');
-      XLSX.writeFile(wb, 'bilpos-peserta-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+      XLSX.writeFile(wb, 'RNR INTAN-peserta-' + new Date().toISOString().slice(0, 10) + '.xlsx');
       BilposUI.showToast('Excel berhasil diekspor!', 'success');
     },
 
@@ -777,3 +777,4 @@
     window.BilposApp = BilposApp;
   }
 })();
+

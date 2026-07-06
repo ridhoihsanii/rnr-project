@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { createRoot } from 'react-dom/client';
 import BracketPage from './components/BracketPage';
 
@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var navItem = document.querySelector('.sidebar-nav-item[data-section="bracket"]');
   if (navItem) {
     navItem.addEventListener('click', function() {
-      window.dispatchEvent(new CustomEvent('bilpos:bracket-activated'));
+      window.dispatchEvent(new CustomEvent('RNR INTAN:bracket-activated'));
     });
   }
 });
+
+
