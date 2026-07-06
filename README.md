@@ -82,6 +82,34 @@ This repository includes an automated GitHub Actions workflow that builds and de
 - **Statistics**: Review detailed tournament analytics.
 - **Export/Import**: Back up and restore tournament data.
 
+## Development Setup
+
+### Git Remotes
+
+This project is mirrored across two repositories:
+
+- **rnr-project** (Primary) — `https://github.com/ridhoihsanii/rnr-project.git`
+- **bilpos-project** (Archive) — `https://github.com/ridhoihsanii/bilpos-project.git`
+
+Local remotes:
+```bash
+git remote -v
+# origin  https://github.com/ridhoihsanii/bilpos-project.git (fetch)
+# origin  https://github.com/ridhoihsanii/bilpos-project.git (push)
+# rnr     https://github.com/ridhoihsanii/rnr-project.git (fetch)
+# rnr     https://github.com/ridhoihsanii/rnr-project.git (push)
+```
+
+To push to rnr-project (primary):
+```bash
+git push rnr main
+```
+
+To push to bilpos-project (archive):
+```bash
+git push origin main
+```
+
 ## Branding
 
 BILPOS follows the **RNR Billiard** visual identity with a premium yellow and black color scheme, centered on **#FACC15** and **#0A0A0A** for a strong, modern tournament presentation.
