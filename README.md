@@ -1,4 +1,4 @@
-﻿# RNR — Rack N Roll Tournament System
+# RNR — Rack N Roll Tournament System
 
 Professional billiard tournament management software for Rack N Roll.
 
